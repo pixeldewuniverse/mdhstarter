@@ -197,96 +197,6 @@ body { font-family: var(--font-b); background: #1a1a18; overflow: hidden; height
 .snum { position:absolute; top:20px; right:20px; background:rgba(255,255,255,0.1);
         color:rgba(255,255,255,0.5); padding:4px 10px; border-radius:10px; font-size:10px; font-weight:600; }
 .snum-dark { background:rgba(59,58,57,0.1); color:var(--mdh-mid); }
-  /* GLOBAL SMOOTH */
-*{ transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
-
-html{ scroll-behavior:smooth; }
-body{
-  background:
-    radial-gradient(circle at 20% 20%, rgba(185,133,118,0.08), transparent 40%),
-    radial-gradient(circle at 80% 60%, rgba(216,162,154,0.08), transparent 40%),
-    linear-gradient(180deg,#fff5f3,#edd7d2);
-}
-
-.slides{ padding-left: 0; }
-
-
-
-.slide.section {
-  opacity: 0 !important;
-  transform: translateY(60px) !important;
-  transition: opacity 0.8s cubic-bezier(.22,1,.36,1), transform 0.8s cubic-bezier(.22,1,.36,1) !important;
-  will-change: transform, opacity;
-}
-.slide.section.show {
-  opacity: 1 !important;
-  transform: translateY(0) !important;
-}
-
-.card,
-.card-dark,
-.card-warm,
-.card-gold,
-.card-blush,
-.card-meta,
-.metric-card {
-  backdrop-filter: blur(6px);
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(59,58,57,0.08);
-  will-change: transform, opacity;
-  opacity: 0;
-  transform: translateY(36px);
-  transition: transform 0.65s cubic-bezier(.22,1,.36,1), opacity 0.65s cubic-bezier(.22,1,.36,1), box-shadow 0.25s ease;
-}
-.section.show .card,
-.section.show .card-dark,
-.section.show .card-warm,
-.section.show .card-gold,
-.section.show .card-blush,
-.section.show .card-meta,
-.section.show .metric-card {
-  opacity: 1;
-  transform: translateY(0);
-}
-.section.show .card:nth-child(1),
-.section.show .card-dark:nth-child(1),
-.section.show .card-meta:nth-child(1),
-.section.show .metric-card:nth-child(1){transition-delay:0.1s}
-.section.show .card:nth-child(2),
-.section.show .card-dark:nth-child(2),
-.section.show .card-meta:nth-child(2),
-.section.show .metric-card:nth-child(2){transition-delay:0.2s}
-.section.show .card:nth-child(3),
-.section.show .card-dark:nth-child(3),
-.section.show .card-meta:nth-child(3),
-.section.show .metric-card:nth-child(3){transition-delay:0.3s}
-.section.show .card:nth-child(4),
-.section.show .card-dark:nth-child(4),
-.section.show .card-meta:nth-child(4),
-.section.show .metric-card:nth-child(4){transition-delay:0.4s}
-.section.show .card:nth-child(5),
-.section.show .card-dark:nth-child(5),
-.section.show .metric-card:nth-child(5){transition-delay:0.5s}
-
-.card:hover,
-.card-dark:hover,
-.card-meta:hover,
-.metric-card:hover {
-  transform: translateY(-8px) scale(1.015);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.25) inset;
-}
-
-.nav-btn, button{
-  box-shadow:0 6px 20px rgba(185,133,118,0.3);
-}
-.nav-btn:hover, button:hover{ transform: scale(1.05); }
-.nav-btn:active, button:active{ transform: scale(0.95); }
-
-.progress-bar{
-  box-shadow:0 0 18px rgba(185,133,118,0.75);
-  background: linear-gradient(90deg, #d8a299, #cbb279);
-}
-
 </style>
 </head>
 <body>
@@ -303,9 +213,6 @@ body{
   </div>
 </div>
 <div class="progress-bar" id="prog" style="width:6.25%"></div>
-
-
-
 
 <!-- MDH Credit -->
 <div class="mdh-credit">
@@ -328,7 +235,7 @@ body{
   </div>
 </div>
 
-<!-- S3: WHY META -->
+  <!-- S3: WHY META -->
 <div class="slide sl-cream" style="position:relative;">
   <div class="snum snum-dark">3/16</div>
   <h2>Kenapa Meta Ads?</h2>
@@ -454,7 +361,7 @@ body{
       <tr><td><strong>📢 Awareness</strong></td><td>Brand baru, event baru</td></tr>
       <tr><td><strong>🔗 Traffic</strong> <span class="tag tag-blue">Populer</span></td><td>Arahkan ke website/WA/link</td></tr>
       <tr><td><strong>❤️ Engagement</strong></td><td>Perbanyak interaksi</td></tr>
-      <tr><td><strong>📋 Leads</strong> <span class="tag tag-gold">Kuat</span></td><td>Kumpulkan data kontak</td></tr>
+      <tr><td><strong>📋 Leads</strong> <span class="tag tag-gold">Kuat</span></td><td>Kumpulkan data kontak</td>/tr>
       <tr><td><strong>📱 App Promo</strong></td><td>Punya aplikasi mobile</td></tr>
       <tr><td><strong>🛒 Sales</strong></td><td>E-commerce + website + Pixel</td></tr>
     </tbody>
@@ -803,113 +710,20 @@ body{
 </div><!-- /slides -->
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const slides = Array.from(document.querySelectorAll('.slide'));
-  // const navItems = Array.from(document.querySelectorAll('.nav-item'));
-  const counter = document.getElementById('ctr');
-  const progressBar = document.getElementById('prog');
-  let current = slides.findIndex(slide => slide.classList.contains('active'));
-  if (current < 0) current = 0;
-
-  slides.forEach((slide, index) => {
-    slide.classList.add('section');
-    slide.id = `slide-${index + 1}`;
-    slide.classList.toggle('active', index === current);
-  });
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('show');
-      }
-    });
-  }, {
-    threshold: 0.15
-  });
-
-  slides.forEach((slide) => observer.observe(slide));
-
-  const updateUI = () => {
-    slides.forEach((slide, index) => {
-      const isActive = index === current;
-      slide.classList.toggle('active', isActive);
-      if (!isActive) {
-        slide.classList.remove('show');
-      }
-    });
-
-    requestAnimationFrame(() => {
-      slides[current].classList.add('show');
-    });
-
-    // navItems.forEach((item) => {
-      // item.classList.toggle('active', Number(item.dataset.slide) === current);
-    // });
-
-    counter.textContent = `${current + 1} / ${slides.length}`;
-    const width = ((current + 1) / slides.length) * 100;
-    progressBar.style.width = `${width}%`;
-  };
-
-  // navItems.forEach((item) => {
-    // item.addEventListener('click', () => {
-      // const next = Number(item.dataset.slide);
-      // if (!Number.isNaN(next)) {
-        // current = Math.max(0, Math.min(slides.length - 1, next));
-        // updateUI();
-      // }
-    // });
-  // });
-
-  window.go = (step) => {
-    current = Math.max(0, Math.min(slides.length - 1, current + step));
-    updateUI();
-  };
-
-  updateUI();
+let cur = 0, tot = 16;
+const slides = document.querySelectorAll('.slide');
+function go(d) {
+  slides[cur].classList.remove('active');
+  cur = Math.max(0, Math.min(tot-1, cur+d));
+  slides[cur].classList.add('active');
+  document.getElementById('ctr').textContent = (cur+1)+' / '+tot;
+  document.getElementById('prog').style.width = ((cur+1)/tot*100)+'%';
+  window.scrollTo(0,0);
+}
+document.addEventListener('keydown', e => {
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') go(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') go(-1);
 });
-  <script>
-
-/* GET ALL SECTIONS */
-const sectionsList = Array.from(document.querySelectorAll('.section'))
-
-let currentIndex = 0
-
-/* DETECT CURRENT SECTION BASED ON SCROLL */
-function updateCurrentSection(){
-let scrollPos = window.scrollY
-
-sectionsList.forEach((sec, i)=>{
-if(scrollPos >= sec.offsetTop - 200){
-currentIndex = i
-}
-})
-}
-
-/* SCROLL TO SECTION */
-function goToSection(index){
-if(index < 0 || index >= sectionsList.length) return
-
-sectionsList[index].scrollIntoView({
-behavior:'smooth'
-})
-}
-/* KEYBOARD CONTROL */
-document.addEventListener('keydown', (e)=>{
-
-updateCurrentSection()
-
-if(e.key === "ArrowRight"){
-goToSection(currentIndex + 1)
-}
-
-if(e.key === "ArrowLeft"){
-goToSection(currentIndex - 1)
-}
-
-})
-
-</script>
 </script>
 </body>
 </html>
