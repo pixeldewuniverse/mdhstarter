@@ -286,14 +286,6 @@ body{
   box-shadow:0 0 18px rgba(185,133,118,0.75);
   background: linear-gradient(90deg, #d8a299, #cbb279);
 }
-  .html {
-scroll-behavior: smooth;
-scroll-snap-type: y mandatory;
-}
-
-.section {
-scroll-snap-align: start;
-}
 
 </style>
 </head>
@@ -895,20 +887,12 @@ currentIndex = i
 }
 
 /* SCROLL TO SECTION */
-let isScrolling = false
-
 function goToSection(index){
-if(isScrolling) return
-
-isScrolling = true
+if(index < 0 || index >= sectionsList.length) return
 
 sectionsList[index].scrollIntoView({
 behavior:'smooth'
 })
-
-setTimeout(()=>{
-isScrolling = false
-},700)
 }
 /* KEYBOARD CONTROL */
 document.addEventListener('keydown', (e)=>{
