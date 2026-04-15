@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mission Cards Meta Ads Praktikum</title>
+    <style>
+      :root {
+        --bg: #f4f7ff;
+        --card: #ffffff;
+        --text: #1f2a44;
+        --muted: #6f7a94;
+        --primary: #4f46e5;
+        --primary-soft: #e9e8ff;
+        --success: #10b981;
+        --danger: #ef4444;
+        --border: #dfe5ff;
+        --shadow: 0 12px 28px rgba(79, 70, 229, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: var(--text);
+        background: linear-gradient(180deg, #eef2ff 0%, var(--bg) 45%, #f8f9ff 100%);
+        min-height: 100vh;
+      }
+
+      .app {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 0 16px 40px;
+      }
+
+      .top-panel {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: rgba(244, 247, 255, 0.95);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--border);
+        margin: 0 -16px 16px;
+        padding: 12px 16px;
+      }
+
+      .panel-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .panel-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .title {
+        margin: 0;
+        font-size: clamp(1.15rem, 2.2vw, 1.65rem);
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .chip,
+      select,
+      button,
+      input {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: white;
+        color: var(--text);
+        padding: 10px 12px;
+        font-size: 0.9rem;
+      }
+
+      select,
+      input {
+        min-height: 40px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      button {
+        cursor: pointer;
+        transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(79, 70, 229, 0.18);
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+        border-color: transparent;
+      }
+
+      .btn-secondary {
+        background: #fff;
+      }
+
+      .btn-danger {
+        color: var(--danger);
+        border-color: #fecaca;
+        background: #fff5f5;
+      }
+
+      .progress-wrap {
+        display: grid;
+        gap: 6px;
+      }
+
+      .progress-label {
+        font-weight: 600;
+        font-size: 0.92rem;
+      }
+
+      .progress-track {
+        width: 100%;
+        height: 10px;
+        border-radius: 999px;
+        background: #e6e9fb;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, #6366f1, #10b981);
+        transition: width 0.35s ease;
+      }
+
+      .group-wrap {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      #groupName {
+        min-width: min(320px, 100%);
+        flex: 1;
+      }
+
+      .cards {
+        display: grid;
+        gap: 14px;
+        margin-top: 12px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: 0 5px 18px rgba(19, 31, 66, 0.06);
+        overflow: hidden;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        border-color: #bec8ff;
+        box-shadow: var(--shadow);
+      }
+
+      .card-header {
+        width: 100%;
+        border: 0;
+        background: transparent;
+        text-align: left;
+        padding: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .card-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+
+      .card-meta {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.87rem;
+      }
+
+      .indicator {
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        background: var(--primary-soft);
+        color: var(--primary);
+        flex: 0 0 auto;
+        font-weight: 700;
+        transition: transform 0.25s ease;
+      }
+
+      .card.open .indicator {
+        transform: rotate(45deg);
+      }
+
+      .card-content {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.38s ease, opacity 0.25s ease;
+        padding: 0 16px;
+      }
+
+      .card.open .card-content {
+        opacity: 1;
+        max-height: 900px;
+        padding-bottom: 16px;
+      }
+
+      .question {
+        margin: 4px 0 10px;
+        line-height: 1.55;
+      }
+
+      .answer-box {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        font-size: 0.94rem;
+        line-height: 1.5;
+        min-height: 110px;
+        resize: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+        background: #fff;
+      }
+
+      .answer-box:focus {
+        outline: none;
+        border-color: #7c83ff;
+        box-shadow: 0 0 0 4px rgba(124, 131, 255, 0.15);
+      }
+
+      .answer-box.saved {
+        animation: pulse 0.55s ease;
+      }
+
+      @keyframes pulse {
+        0% { background: #ecfeff; }
+        100% { background: #fff; }
+      }
+
+      .answer-key {
+        margin-top: 10px;
+        padding: 12px;
+        border-radius: 12px;
+        background: #f8fafc;
+        border: 1px dashed #cad6ee;
+        font-size: 0.9rem;
+        color: #273656;
+        display: none;
+      }
+
+      .show-key .answer-key {
+        display: block;
+      }
+
+      .footer-note {
+        margin-top: 20px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      @media (min-width: 740px) {
+        .panel-grid {
+          grid-template-columns: 1.4fr 1fr;
+          align-items: start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" id="app">
+      <div class="top-panel">
+        <div class="panel-grid">
+          <div>
+            <h1 class="title">Mission Cards Meta Ads Praktikum</h1>
+            <p class="subtitle">Belajar strategi Meta Ads dengan latihan berbasis misi interaktif.</p>
+          </div>
+          <div class="panel-row" style="justify-content: flex-end;">
+            <span class="chip" id="timerLabel">Sisa Waktu: 30:00</span>
+            <select id="modeSelect" aria-label="Mode belajar">
+              <option value="student">Student Mode</option>
+              <option value="dosen">Dosen Mode</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="panel-row" style="margin-top: 10px; justify-content: space-between; align-items: end;">
+          <div class="group-wrap">
+            <label for="groupName" class="subtitle">Nama Kelompok</label>
+            <input id="groupName" type="text" placeholder="Contoh: Kelompok Garuda" />
+          </div>
+          <div class="actions">
+            <button class="btn-secondary" id="downloadBtn" type="button">Download Jawaban</button>
+            <button class="btn-danger" id="resetBtn" type="button">Reset Answers</button>
+          </div>
+        </div>
+
+        <div class="progress-wrap" style="margin-top: 12px;">
+          <div class="progress-label" id="progressLabel">Progress: 0%</div>
+          <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+        </div>
+      </div>
+
+      <section class="cards" id="cardsContainer"></section>
+
+      <p class="footer-note">Tip: klik judul misi untuk membuka detail. Semua jawaban tersimpan otomatis.</p>
+    </div>
+
+    <script>
+      const STORAGE_KEY_PREFIX = "mission_answer_";
+      const GROUP_NAME_KEY = "mission_group_name";
+      const MODE_KEY = "mission_mode";
+      const TIMER_KEY = "mission_timer_remaining";
+      const TIMER_DEFAULT_SECONDS = 30 * 60;
+
+      const missions = [
+        {
+          title: "Mission 1 - Objective Campaign",
+          level: "Dasar",
+          question: "Jika bisnis kamu ingin meningkatkan jumlah pesan WhatsApp dari iklan Meta Ads, objective campaign apa yang paling tepat dan kenapa?",
+          key: "Gunakan objective Messages agar algoritma Meta mengoptimalkan iklan ke audiens yang berpotensi memulai percakapan."
+        },
+        {
+          title: "Mission 2 - Audience Persona",
+          level: "Dasar",
+          question: "Tentukan target audiens untuk produk minuman sehat mahasiswa (usia, minat, perilaku) dan jelaskan alasan pemilihannya.",
+          key: "Contoh: usia 18-24, minat healthy lifestyle, gym, meal prep, dan perilaku pembeli online aktif agar relevan dengan kebutuhan produk sehat praktis."
+        },
+        {
+          title: "Mission 3 - Creative Hook",
+          level: "Menengah",
+          question: "Buat 1 konsep hook pembuka 3 detik pertama untuk video ads produk skincare anti jerawat agar audiens berhenti scroll.",
+          key: "Contoh hook: 'Jerawat sering muncul sebelum presentasi penting?' dikombinasikan close-up before/after agar langsung menyentuh pain point."
+        },
+        {
+          title: "Mission 4 - Copywriting Framework",
+          level: "Menengah",
+          question: "Tulis copy iklan singkat memakai framework PAS (Problem-Agitate-Solution) untuk jasa kursus digital marketing.",
+          key: "Problem: bingung mulai karier digital; Agitate: peluang kerja lewat begitu saja; Solution: ikut kursus terstruktur + mentoring."
+        },
+        {
+          title: "Mission 5 - Budget Allocation",
+          level: "Lanjutan",
+          question: "Kamu punya budget Rp1.500.000 untuk 7 hari. Bagaimana alokasi budget harian dan strategi testing kreatif yang kamu lakukan?",
+          key: "Contoh: Rp200.000/hari untuk testing 3-4 ad set awal, sisanya scaling pada ad set dengan CTR dan CPL terbaik di hari 4-7."
+        },
+        {
+          title: "Mission 6 - Evaluasi Metrics",
+          level: "Lanjutan",
+          question: "Dari metrik CTR rendah, CPM tinggi, dan Conversion Rate baik, insight apa yang bisa ditarik dan langkah optimasi berikutnya?",
+          key: "Kemungkinan kreatif kurang menarik sehingga CTR rendah, target terlalu kompetitif (CPM tinggi), tetapi landing/offer bagus. Optimasi pada creative angle dan audience refinement."
+        }
+      ];
+
+      const cardsContainer = document.getElementById("cardsContainer");
+      const progressLabel = document.getElementById("progressLabel");
+      const progressFill = document.getElementById("progressFill");
+      const modeSelect = document.getElementById("modeSelect");
+      const groupNameInput = document.getElementById("groupName");
+      const downloadBtn = document.getElementById("downloadBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const timerLabel = document.getElementById("timerLabel");
+
+      let openCardIndex = -1;
+      let remainingSeconds = getInitialTimerSeconds();
+
+      function renderCards() {
+        cardsContainer.innerHTML = missions
+          .map(
+            (mission, index) => `
+              <article class="card" data-index="${index}">
+                <button class="card-header" type="button" aria-expanded="false" aria-controls="content-${index}">
+                  <div>
+                    <h2 class="card-title">${mission.title}</h2>
+                    <div class="card-meta">Level: ${mission.level}</div>
+                  </div>
+                  <div class="indicator">+</div>
+                </button>
+                <div id="content-${index}" class="card-content">
+                  <p class="question">${mission.question}</p>
+                  <textarea class="answer-box" data-answer-index="${index}" placeholder="Tulis jawaban kamu di sini..."></textarea>
+                  <div class="answer-key"><strong>Kunci Jawaban:</strong> ${mission.key}</div>
+                </div>
+              </article>
+            `
+          )
+          .join("");
+
+        bindCardEvents();
+        restoreAnswers();
+        applyMode();
+        updateProgress();
+      }
+
+      function bindCardEvents() {
+        const headers = cardsContainer.querySelectorAll(".card-header");
+        headers.forEach((header) => {
+          header.addEventListener("click", () => {
+            const card = header.closest(".card");
+            const cardIndex = Number(card.dataset.index);
+            toggleCard(cardIndex);
+          });
+        });
+
+        const textareas = cardsContainer.querySelectorAll(".answer-box");
+        textareas.forEach((textarea) => {
+          textarea.addEventListener("input", onAnswerInput);
+          autoResize(textarea);
+        });
+      }
+
+      function toggleCard(index) {
+        const cards = cardsContainer.querySelectorAll(".card");
+        cards.forEach((card) => {
+          const cardIndex = Number(card.dataset.index);
+          const header = card.querySelector(".card-header");
+          const isOpen = cardIndex === index && openCardIndex !== index;
+
+          card.classList.toggle("open", isOpen);
+          header.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        openCardIndex = openCardIndex === index ? -1 : index;
+      }
+
+      function onAnswerInput(event) {
+        const textarea = event.target;
+        const idx = Number(textarea.dataset.answerIndex);
+        localStorage.setItem(`${STORAGE_KEY_PREFIX}${idx}`, textarea.value.trim());
+        autoResize(textarea);
+        showSavedFeedback(textarea);
+        playFeedbackSound();
+        updateProgress();
+      }
+
+      function showSavedFeedback(textarea) {
+        textarea.classList.remove("saved");
+        requestAnimationFrame(() => {
+          textarea.classList.add("saved");
+          setTimeout(() => textarea.classList.remove("saved"), 600);
+        });
+      }
+
+      function playFeedbackSound() {
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.value = 660;
+        gain.gain.value = 0.02;
+
+        oscillator.connect(gain);
+        gain.connect(context.destination);
+
+        oscillator.start();
+        oscillator.stop(context.currentTime + 0.05);
+      }
+
+      function autoResize(textarea) {
+        textarea.style.height = "auto";
+        textarea.style.height = `${textarea.scrollHeight}px`;
+      }
+
+      function updateProgress() {
+        const answers = missions.map((_, index) => (localStorage.getItem(`${STORAGE_KEY_PREFIX}${index}`) || "").trim());
+        const filledCount = answers.filter((answer) => answer.length > 0).length;
+        const percentage = Math.round((filledCount / missions.length) * 100);
+
+        progressLabel.textContent = `Progress: ${percentage}%`;
+        progressFill.style.width = `${percentage}%`;
+      }
+
+      function restoreAnswers() {
+        const textareas = cardsContainer.querySelectorAll(".answer-box");
+        textareas.forEach((textarea) => {
+          const idx = Number(textarea.dataset.answerIndex);
+          const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}${idx}`) || "";
+          textarea.value = saved;
+          autoResize(textarea);
+        });
+
+        groupNameInput.value = localStorage.getItem(GROUP_NAME_KEY) || "";
+      }
+
+      function applyMode() {
+        const mode = modeSelect.value;
+        const cards = cardsContainer.querySelectorAll(".card");
+        cards.forEach((card) => {
+          card.classList.toggle("show-key", mode === "dosen");
+        });
+        localStorage.setItem(MODE_KEY, mode);
+      }
+
+      function downloadAnswers() {
+        const groupName = groupNameInput.value.trim() || "Tanpa Nama Kelompok";
+        const contentLines = [`Group Name: ${groupName}`, ""]; 
+
+        missions.forEach((mission, index) => {
+          const answer = (localStorage.getItem(`${STORAGE_KEY_PREFIX}${index}`) || "").trim() || "-";
+          contentLines.push(`Q${index + 1} (${mission.title}): ${answer}`);
+        });
+
+        const blob = new Blob([contentLines.join("\n")], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = "jawaban_mission_cards.txt";
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function resetAnswers() {
+        const confirmed = window.confirm("Semua jawaban akan dihapus. Lanjutkan?");
+        if (!confirmed) return;
+
+        missions.forEach((_, index) => localStorage.removeItem(`${STORAGE_KEY_PREFIX}${index}`));
+        localStorage.removeItem(GROUP_NAME_KEY);
+        groupNameInput.value = "";
+        restoreAnswers();
+        updateProgress();
+      }
+
+      function formatTime(totalSeconds) {
+        const minutes = Math.floor(totalSeconds / 60)
+          .toString()
+          .padStart(2, "0");
+        const seconds = Math.floor(totalSeconds % 60)
+          .toString()
+          .padStart(2, "0");
+        return `${minutes}:${seconds}`;
+      }
+
+      function getInitialTimerSeconds() {
+        const stored = Number(localStorage.getItem(TIMER_KEY));
+        if (Number.isFinite(stored) && stored > 0) return stored;
+        return TIMER_DEFAULT_SECONDS;
+      }
+
+      function startTimer() {
+        timerLabel.textContent = `Sisa Waktu: ${formatTime(remainingSeconds)}`;
+
+        const interval = setInterval(() => {
+          if (remainingSeconds <= 0) {
+            clearInterval(interval);
+            localStorage.removeItem(TIMER_KEY);
+            timerLabel.textContent = "Sisa Waktu: 00:00";
+            alert("Waktu habis!");
+            return;
+          }
+
+          remainingSeconds -= 1;
+          localStorage.setItem(TIMER_KEY, String(remainingSeconds));
+          timerLabel.textContent = `Sisa Waktu: ${formatTime(remainingSeconds)}`;
+        }, 1000);
+      }
+
+      function init() {
+        renderCards();
+        const savedMode = localStorage.getItem(MODE_KEY);
+        if (savedMode === "dosen" || savedMode === "student") {
+          modeSelect.value = savedMode;
+        }
+        applyMode();
+
+        modeSelect.addEventListener("change", applyMode);
+        groupNameInput.addEventListener("input", () => {
+          localStorage.setItem(GROUP_NAME_KEY, groupNameInput.value);
+        });
+        downloadBtn.addEventListener("click", downloadAnswers);
+        resetBtn.addEventListener("click", resetAnswers);
+
+        startTimer();
+      }
+
+      init();
+    </script>
+  </body>
+</html>
