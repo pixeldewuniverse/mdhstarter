@@ -1,19 +1,1687 @@
-<section>
-  <h1>Tutorial</h1>
-  <p>Alur cepat membuat campaign Meta Ads dari nol.</p>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Tutorial Meta Ads From Scratch | MDH</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', 'Segoe UI', sans-serif; background: #FAF7F4; color: #3B3A39; }
 
-  <div class="card">
-    <h2>Step 1 — Brief Objective</h2>
-    <p>Tentukan target bisnis dan KPI utama sebelum menulis copy atau memilih aset kreatif.</p>
+/* PRINT */
+@media print {
+  body { background: white; font-size: 11pt; }
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+  .step-block { page-break-inside: avoid; }
+  .mockup { page-break-inside: avoid; }
+}
+
+/* COVER */
+.cover { background: linear-gradient(135deg, #3B3A39 0%, #1a1a18 100%); 
+         min-height: 100vh; display: flex; flex-direction: column; 
+         justify-content: center; align-items: center; text-align: center; padding: 60px 40px; }
+.cover .instiki-badge { background: rgba(255,255,255,0.2); color: white; padding: 8px 20px; 
+                        border-radius: 20px; font-size: 13px; font-weight: 700; 
+                        letter-spacing: 1px; margin-bottom: 40px; }
+.cover h1 { font-size: 52px; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 16px; }
+.cover h1 span { color: #90CAF9; }
+.cover .tagline { font-size: 18px; color: rgba(255,255,255,0.8); max-width: 600px; 
+                  line-height: 1.6; margin-bottom: 40px; }
+.cover .meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; 
+                    max-width: 700px; margin: 0 auto 50px; }
+.cover .meta-box { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 16px; }
+.cover .meta-box .label { font-size: 10px; color: rgba(255,255,255,0.6); text-transform: uppercase; 
+                           letter-spacing: 1px; margin-bottom: 4px; }
+.cover .meta-box .value { font-size: 14px; font-weight: 700; color: white; }
+.cover .toc-title { color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 700; 
+                    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
+.cover .toc { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-width: 600px; text-align: left; }
+.cover .toc-item { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; 
+                   color: white; font-size: 13px; display: flex; gap: 10px; align-items: center; }
+.cover .toc-num { background: rgba(255,255,255,0.3); width: 22px; height: 22px; border-radius: 50%; 
+                  display: flex; align-items: center; justify-content: center; font-size: 11px; 
+                  font-weight: 700; flex-shrink: 0; }
+
+/* DOCUMENT BODY */
+.doc { max-width: 900px; margin: 0 auto; padding: 40px 40px; background: white; 
+       box-shadow: 0 0 40px rgba(0,0,0,0.1); }
+
+/* SECTION HEADER */
+.section-header { background: linear-gradient(135deg, #1877F2, #0D47A1); border-radius: 12px; 
+                  padding: 24px 28px; margin: 40px 0 24px; color: white; }
+.section-header .section-num { font-size: 12px; font-weight: 700; text-transform: uppercase; 
+                                letter-spacing: 2px; opacity: 0.7; margin-bottom: 6px; }
+.section-header h2 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+.section-header p { font-size: 14px; opacity: 0.85; line-height: 1.5; }
+
+/* STEP BLOCKS */
+.step-block { margin-bottom: 32px; }
+.step-header { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
+.step-num { background: #1877F2; color: white; width: 44px; height: 44px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-size: 18px; 
+            font-weight: 800; flex-shrink: 0; }
+.step-title { }
+.step-title h3 { font-size: 20px; font-weight: 700; margin-bottom: 4px; color: #1a1a2e; }
+.step-title p { font-size: 14px; color: #606770; line-height: 1.5; }
+
+/* MOCKUP STYLES */
+.mockup { border: 1px solid #ddd; border-radius: 12px; overflow: hidden; 
+          margin: 16px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.mockup-bar { background: #3a3b3c; padding: 8px 14px; display: flex; align-items: center; gap: 8px; }
+.mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+.mockup-url { background: #4a4b4c; color: #ccc; padding: 4px 12px; border-radius: 4px; 
+              font-size: 11px; flex: 1; font-family: monospace; }
+.mockup-body { background: white; }
+
+/* META UI ELEMENTS */
+.meta-nav { background: #1877F2; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }
+.meta-nav-logo { color: white; font-size: 22px; font-weight: 900; }
+.meta-nav-right { display: flex; gap: 8px; }
+.meta-nav-btn { background: rgba(255,255,255,0.2); color: white; padding: 5px 12px; 
+                border-radius: 6px; font-size: 12px; cursor: pointer; }
+
+.meta-sidebar { width: 220px; background: #f8f8f8; border-right: 1px solid #ddd; 
+                padding: 16px 0; float: left; min-height: 300px; }
+.meta-sidebar-item { padding: 9px 16px; font-size: 13px; color: #3B3A39; cursor: pointer; 
+                     display: flex; align-items: center; gap: 8px; }
+.meta-sidebar-item:hover, .meta-sidebar-item.active { background: #E8F0FE; color: #1877F2; font-weight: 600; }
+.meta-sidebar-item .icon { font-size: 16px; }
+
+.meta-content { margin-left: 220px; padding: 20px; min-height: 300px; }
+
+.meta-btn { display: inline-flex; align-items: center; gap: 6px; background: #1877F2; 
+            color: white; padding: 8px 16px; border-radius: 6px; font-size: 13px; 
+            font-weight: 600; cursor: pointer; border: none; }
+.meta-btn-outline { background: white; color: #1877F2; border: 1px solid #1877F2; }
+.meta-btn-green { background: #42B72A; }
+
+.meta-form-group { margin-bottom: 16px; }
+.meta-form-group label { display: block; font-size: 13px; font-weight: 600; 
+                          margin-bottom: 6px; color: #3B3A39; }
+.meta-input { width: 100%; padding: 8px 12px; border: 1px solid #ccd0d5; border-radius: 6px; 
+              font-size: 13px; background: white; color: #3B3A39; }
+.meta-input:focus { border-color: #1877F2; outline: none; }
+.meta-select { width: 100%; padding: 8px 12px; border: 1px solid #ccd0d5; border-radius: 6px; 
+               font-size: 13px; background: white; appearance: none; 
+               background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23606770' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+               background-repeat: no-repeat; background-position: right 10px center; }
+
+/* OBJECTIVE CARDS */
+.objective-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 16px; }
+.obj-card { border: 2px solid #ddd; border-radius: 8px; padding: 14px; cursor: pointer; 
+            transition: all 0.2s; }
+.obj-card:hover { border-color: #1877F2; background: #EBF5FB; }
+.obj-card.selected { border-color: #1877F2; background: #EBF5FB; }
+.obj-card .obj-icon { font-size: 24px; margin-bottom: 6px; }
+.obj-card .obj-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.obj-card .obj-desc { font-size: 11px; color: #606770; line-height: 1.4; }
+
+/* AUDIENCE METER */
+.audience-meter { background: #f8f9fa; border-radius: 8px; padding: 14px; margin-top: 10px; }
+.meter-label { font-size: 12px; color: #606770; margin-bottom: 6px; }
+.meter-bar { height: 8px; background: #ddd; border-radius: 4px; overflow: hidden; }
+.meter-fill { height: 100%; background: linear-gradient(90deg, #42B72A, #1877F2); border-radius: 4px; }
+.meter-values { display: flex; justify-content: space-between; font-size: 11px; color: #606770; margin-top: 4px; }
+.audience-est { margin-top: 10px; font-size: 13px; }
+.audience-est strong { color: #1877F2; font-size: 16px; }
+
+/* BUDGET SECTION */
+.budget-toggle { display: flex; gap: 0; border: 1px solid #1877F2; border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
+.budget-toggle-btn { flex: 1; padding: 8px; text-align: center; font-size: 12px; font-weight: 600; cursor: pointer; background: white; color: #1877F2; }
+.budget-toggle-btn.active { background: #1877F2; color: white; }
+
+/* SCREENSHOT PLACEHOLDER */
+.screenshot-placeholder { background: linear-gradient(135deg, #f8f9fa, #e9ecef); 
+                           border: 2px dashed #adb5bd; border-radius: 10px; 
+                           padding: 30px; text-align: center; margin: 16px 0; }
+.screenshot-placeholder .ph-icon { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
+.screenshot-placeholder .ph-title { font-size: 14px; font-weight: 700; color: #495057; margin-bottom: 4px; }
+.screenshot-placeholder .ph-desc { font-size: 12px; color: #6c757d; line-height: 1.5; }
+.screenshot-placeholder .ph-badge { display: inline-block; background: #fd7e14; color: white; 
+                                     padding: 3px 10px; border-radius: 10px; font-size: 11px; 
+                                     font-weight: 700; margin-top: 8px; }
+
+/* INFO BOXES */
+.info-box { border-radius: 10px; padding: 14px 18px; margin: 12px 0; display: flex; gap: 12px; align-items: flex-start; }
+.info-box.tip { background: #E8F5E9; border-left: 4px solid #42B72A; }
+.info-box.warning { background: #FFF3E0; border-left: 4px solid #FF9800; }
+.info-box.danger { background: #FFEBEE; border-left: 4px solid #F44336; }
+.info-box.info { background: #E3F2FD; border-left: 4px solid #1877F2; }
+.info-box-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.info-box-content { font-size: 13px; line-height: 1.6; color: #333; }
+.info-box-content strong { font-weight: 700; display: block; margin-bottom: 2px; }
+
+/* CHECKLIST */
+.checklist { list-style: none; margin: 10px 0; }
+.checklist li { display: flex; gap: 10px; margin-bottom: 8px; font-size: 14px; line-height: 1.5; align-items: flex-start; }
+.check-icon { flex-shrink: 0; margin-top: 1px; }
+
+/* FLOW ARROW */
+.flow-steps { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; 
+              background: #f8f9fa; border-radius: 10px; padding: 14px 18px; margin: 12px 0; }
+.flow-step { background: #1877F2; color: white; padding: 6px 14px; border-radius: 20px; 
+             font-size: 12px; font-weight: 600; white-space: nowrap; }
+.flow-arrow { color: #1877F2; font-weight: 700; font-size: 16px; }
+
+/* HIGHLIGHT BOX */
+.highlight-box { background: #1877F2; color: white; border-radius: 10px; 
+                 padding: 16px 20px; margin: 16px 0; }
+.highlight-box h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.highlight-box p { font-size: 13px; opacity: 0.9; line-height: 1.6; }
+
+/* DIVIDER */
+.divider { height: 1px; background: #e4e6ea; margin: 24px 0; }
+
+/* TWO COL */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 12px 0; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 12px 0; }
+
+/* SMALL CARDS */
+.small-card { background: #f8f9fa; border-radius: 8px; padding: 14px; border: 1px solid #e4e6ea; }
+.small-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: #1877F2; }
+.small-card p { font-size: 12px; color: #606770; line-height: 1.5; }
+
+/* NUMBER TAG */
+.num-tag { display: inline-flex; align-items: center; justify-content: center; 
+           width: 20px; height: 20px; background: #1877F2; color: white; 
+           border-radius: 50%; font-size: 11px; font-weight: 700; margin-right: 4px; flex-shrink: 0; }
+
+/* FOOTER */
+.doc-footer { margin-top: 60px; padding-top: 20px; border-top: 2px solid #1877F2; 
+              display: flex; justify-content: space-between; font-size: 12px; color: #606770; }
+</style>
+</head>
+<body>
+<div style="position:fixed;bottom:14px;right:16px;z-index:9999;
+  display:flex;align-items:center;gap:6px;opacity:0.55;pointer-events:none;">
+  <div style="width:22px;height:22px;background:#CBB279;border-radius:4px;
+    display:flex;align-items:center;justify-content:center;">
+    <span style="font-family:Georgia,serif;font-weight:900;font-size:10px;color:#3B3A39;">M</span>
+  </div>
+  <span style="font-size:10px;color:#3B3A39;font-family:sans-serif;letter-spacing:0.3px;">MDH · Maharani Digital Hub</span>
+</div>
+
+<!-- ===== COVER ===== -->
+<div class="cover no-print" style="page-break-after: always;">
+  <div class="instiki-badge">MDH · Meta Ads Series</div>
+  <h1>TUTORIAL<br>META ADS<br><span>FROM SCRATCH</span></h1>
+  <p class="tagline">Panduan lengkap setup iklan berbayar di Meta — dari buat akun sampai iklan jalan dan laporan performa.</p>
+  <div class="meta-grid">
+    <div class="meta-box"><div class="label">Dibuat Untuk</div><div class="value">Peserta MDH</div></div>
+    <div class="meta-box"><div class="label">Level</div><div class="value">Pemula / Pertama Kali</div></div>
+    <div class="meta-box"><div class="label">Platform</div><div class="value">Meta Ads Manager</div></div>
+    <div class="meta-box"><div class="label">Estimasi Waktu</div><div class="value">60–90 Menit</div></div>
+  </div>
+  <div class="toc-title">Isi Dokumen</div>
+  <div class="toc">
+    <div class="toc-item"><div class="toc-num">1</div>Persiapan & Akun yang Dibutuhkan</div>
+    <div class="toc-item"><div class="toc-num">2</div>Setup Facebook Page</div>
+    <div class="toc-item"><div class="toc-num">3</div>Masuk ke Meta Ads Manager</div>
+    <div class="toc-item"><div class="toc-num">4</div>Membuat Campaign Pertama</div>
+    <div class="toc-item"><div class="toc-num">5</div>Setup Ad Set — Audience & Budget</div>
+    <div class="toc-item"><div class="toc-num">6</div>Membuat Ad — Creative & Copy</div>
+    <div class="toc-item"><div class="toc-num">7</div>Review & Publish</div>
+    <div class="toc-item"><div class="toc-num">8</div>Membaca Laporan Performa</div>
+  </div>
+</div>
+
+<!-- ===== DOCUMENT START ===== -->
+<div class="doc">
+
+<!-- SECTION 1: PERSIAPAN -->
+<div class="section-header">
+  <div class="section-num">Bagian 1 dari 8</div>
+  <h2>Persiapan — Akun & Infrastruktur yang Dibutuhkan</h2>
+  <p>Sebelum bisa beriklan di Meta, ada beberapa akun yang harus disiapkan. Jangan skip bagian ini.</p>
+</div>
+
+<div class="info-box info">
+  <div class="info-box-icon">ℹ️</div>
+  <div class="info-box-content">
+    <strong>Ekosistem Meta terdiri dari beberapa produk yang saling terhubung.</strong>
+    Meta Ads bukan aplikasi terpisah — ini adalah fitur di dalam ekosistem Meta yang membutuhkan Facebook Personal Account sebagai fondasi dasarnya.
+  </div>
+</div>
+
+<div class="three-col" style="margin-top: 20px;">
+  <div class="small-card">
+    <h4>① Facebook Personal Account</h4>
+    <p>Akun Facebook pribadi kamu. Ini adalah "kunci" untuk masuk ke semua produk Meta bisnis. <strong>Wajib ada dan aktif.</strong></p>
+    <div style="margin-top:8px;font-size:11px;background:#d1fae5;color:#065f46;padding:4px 8px;border-radius:4px;display:inline-block;font-weight:700;">✓ WAJIB</div>
+  </div>
+  <div class="small-card">
+    <h4>② Facebook Page (Halaman Bisnis)</h4>
+    <p>Identitas bisnis UMKM kamu di Facebook. Iklan akan "keluar dari" halaman ini. <strong>Wajib dibuat sebelum beriklan.</strong></p>
+    <div style="margin-top:8px;font-size:11px;background:#d1fae5;color:#065f46;padding:4px 8px;border-radius:4px;display:inline-block;font-weight:700;">✓ WAJIB</div>
+  </div>
+  <div class="small-card">
+    <h4>③ Meta Ads Manager</h4>
+    <p>Dashboard tempat membuat dan mengelola semua campaign iklan. Bisa diakses via browser di <em>adsmanager.facebook.com</em></p>
+    <div style="margin-top:8px;font-size:11px;background:#dbeafe;color:#1e40af;padding:4px 8px;border-radius:4px;display:inline-block;font-weight:700;">🎯 MAIN TOOL</div>
+  </div>
+</div>
+
+<div class="two-col" style="margin-top: 16px;">
+  <div class="small-card">
+    <h4>④ Metode Pembayaran</h4>
+    <p>Kartu debit/kredit atau PayPal. Diperlukan sebelum iklan bisa running. Meta tidak debit langsung — ada threshold billing.</p>
+    <div style="margin-top:8px;font-size:11px;background:#d1fae5;color:#065f46;padding:4px 8px;border-radius:4px;display:inline-block;font-weight:700;">✓ WAJIB UNTUK RUNNING</div>
+  </div>
+  <div class="small-card">
+    <h4>⑤ Instagram Business Account (Opsional)</h4>
+    <p>Jika UMKM punya IG, hubungkan ke Facebook Page agar iklan bisa tampil di Instagram juga. Setting di: IG → Settings → Account → Switch to Professional.</p>
+    <div style="margin-top:8px;font-size:11px;background:#fef3c7;color:#92400e;padding:4px 8px;border-radius:4px;display:inline-block;font-weight:700;">RECOMMENDED</div>
+  </div>
+</div>
+
+<div class="info-box warning" style="margin-top: 20px;">
+  <div class="info-box-icon">⚠️</div>
+  <div class="info-box-content">
+    <strong>Akun Facebook baru sering mengalami pembatasan iklan.</strong>
+    Meta membatasi akun yang baru dibuat atau jarang aktif. Jika akun kamu berumur kurang dari 30 hari atau tidak pernah aktif, kemungkinan besar tidak bisa langsung beriklan. Solusi: gunakan akun Facebook yang sudah aktif minimal 1–3 bulan.
+  </div>
+</div>
+
+<!-- CHECKLIST PERSIAPAN -->
+<div style="background:#f8f9fa;border-radius:10px;padding:20px;margin-top:20px;">
+  <div style="font-size:15px;font-weight:700;margin-bottom:12px;">✅ Checklist Sebelum Mulai</div>
+  <ul class="checklist">
+    <li><span class="check-icon">☐</span> Facebook Personal Account sudah aktif (min. 30 hari)</li>
+    <li><span class="check-icon">☐</span> Sudah punya nama bisnis / UMKM yang akan diiklankan</li>
+    <li><span class="check-icon">☐</span> Foto profil dan foto cover untuk Facebook Page sudah disiapkan</li>
+    <li><span class="check-icon">☐</span> Deskripsi singkat bisnis sudah disiapkan (2–3 kalimat)</li>
+    <li><span class="check-icon">☐</span> Ada kartu debit/kredit atau akun PayPal untuk pembayaran</li>
+    <li><span class="check-icon">☐</span> Sudah tahu tujuan iklan (awareness / traffic / leads?)</li>
+    <li><span class="check-icon">☐</span> Sudah punya gambar atau video untuk creative iklan</li>
+  </ul>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 2: SETUP FACEBOOK PAGE -->
+<div class="section-header page-break">
+  <div class="section-num">Bagian 2 dari 8</div>
+  <h2>Setup Facebook Page — Identitas Bisnis Kamu</h2>
+  <p>Facebook Page adalah "wajah" bisnis kamu di Meta. Iklan akan muncul atas nama halaman ini.</p>
+</div>
+
+<!-- STEP 1 -->
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">1</div>
+    <div class="step-title">
+      <h3>Buka Facebook dan Cari Menu "Pages"</h3>
+      <p>Login ke facebook.com dari browser desktop. Di menu kiri, cari dan klik "Pages" atau "Halaman".</p>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>Step 2 — Setup Campaign</h2>
-    <p>Pilih objective, tentukan budget, audience, placement, dan event tracking yang relevan.</p>
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">facebook.com</div>
+    </div>
+    <div class="mockup-body">
+      <div class="meta-nav">
+        <div class="meta-nav-logo">f</div>
+        <div style="background:white;border-radius:20px;padding:6px 14px;font-size:12px;color:#444;flex:1;max-width:300px;margin:0 20px;">🔍 Cari di Facebook</div>
+        <div class="meta-nav-right">
+          <div class="meta-nav-btn">👤 Profil</div>
+          <div class="meta-nav-btn">⚙️</div>
+        </div>
+      </div>
+      <div style="display:flex;">
+        <div style="width:220px;background:#f0f2f5;border-right:1px solid #ddd;padding:16px;min-height:280px;">
+          <div style="font-size:12px;color:#606770;margin-bottom:10px;font-weight:700;">MENU</div>
+          <div style="padding:8px 10px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:8px;margin-bottom:4px;">🏠 Beranda</div>
+          <div style="padding:8px 10px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:8px;margin-bottom:4px;background:#e8f0fe;color:#1877F2;font-weight:700;">📄 Pages / Halaman ← KLIK INI</div>
+          <div style="padding:8px 10px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:8px;margin-bottom:4px;">👥 Grup</div>
+          <div style="padding:8px 10px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:8px;margin-bottom:4px;">🎬 Video</div>
+          <div style="padding:8px 10px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:8px;">🛍️ Marketplace</div>
+        </div>
+        <div style="flex:1;padding:20px;">
+          <div style="font-size:18px;font-weight:700;margin-bottom:16px;">Pages Kamu</div>
+          <div style="background:#e8f0fe;border:2px dashed #1877F2;border-radius:10px;padding:16px;text-align:center;color:#1877F2;font-size:13px;">
+            <div style="font-size:24px;margin-bottom:6px;">➕</div>
+            <strong>Buat Page Baru</strong><br>
+            <span style="font-size:12px;color:#606770;">Kamu belum punya halaman. Buat sekarang!</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>Step 3 — Launch & Iterate</h2>
-    <p>Monitor performa 24-72 jam pertama, lalu optimasi berdasarkan CTR, CPM, CPC, dan Conversion Rate.</p>
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Ambil screenshot tampilan Facebook kamu saat sudah klik menu "Pages"<br>dan terlihat tombol "Create New Page"</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
   </div>
-</section>
+</div>
+
+<!-- STEP 2 -->
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">2</div>
+    <div class="step-title">
+      <h3>Klik "Create New Page" dan Isi Informasi Dasar</h3>
+      <p>Klik tombol "+ Create New Page". Akan muncul form untuk mengisi nama, kategori, dan deskripsi bisnis.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">facebook.com/pages/create</div>
+    </div>
+    <div class="mockup-body" style="padding:24px;">
+      <div style="font-size:20px;font-weight:800;margin-bottom:20px;color:#1a1a2e;">Buat Halaman</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+        <div>
+          <div class="meta-form-group">
+            <label>Nama Halaman *</label>
+            <div class="meta-input" style="color:#1877F2;font-weight:600;">HUNGR. Food</div>
+            <div style="font-size:11px;color:#606770;margin-top:4px;">Gunakan nama UMKM kamu secara resmi</div>
+          </div>
+          <div class="meta-form-group">
+            <label>Kategori *</label>
+            <div class="meta-input">Restaurant · Food · Delivery Service</div>
+            <div style="font-size:11px;color:#606770;margin-top:4px;">Ketik kategori → pilih dari saran yang muncul</div>
+          </div>
+          <div class="meta-form-group">
+            <label>Bio / Deskripsi</label>
+            <div class="meta-input" style="height:70px;padding-top:8px;">Makanan enak, antar langsung ke kamu. Nasi goreng, mie, kwetiau. Free delivery 3km. Pre-order via DM! 🛵</div>
+            <div style="font-size:11px;color:#606770;margin-top:4px;">Max 255 karakter. Jadikan menarik!</div>
+          </div>
+          <button class="meta-btn" style="width:100%;">➡️ Buat Halaman</button>
+        </div>
+        <div style="background:#f8f9fa;border-radius:10px;padding:16px;">
+          <div style="font-size:12px;font-weight:700;color:#606770;margin-bottom:12px;text-transform:uppercase;">Preview</div>
+          <div style="background:white;border-radius:8px;overflow:hidden;border:1px solid #ddd;">
+            <div style="height:60px;background:linear-gradient(135deg,#1877F2,#0D47A1);"></div>
+            <div style="padding:10px;padding-top:0;position:relative;">
+              <div style="width:40px;height:40px;background:#1877F2;border-radius:50%;border:3px solid white;position:relative;top:-20px;left:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:14px;">H</div>
+              <div style="margin-top:-14px;padding-left:4px;">
+                <div style="font-size:14px;font-weight:700;">HUNGR. Food</div>
+                <div style="font-size:11px;color:#606770;">Restaurant · Food Service</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box tip">
+    <div class="info-box-icon">💡</div>
+    <div class="info-box-content">
+      <strong>Tips Nama & Kategori Page:</strong>
+      Nama Page tidak bisa sembarangan diubah setelah punya banyak likes. Pastikan nama benar dari awal. Untuk kategori: pilih yang paling spesifik — bukan sekadar "Business" tapi "Restaurant", "Clothing Store", dll. Semakin spesifik, semakin mudah ditemukan.
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot form "Create New Page" yang sudah diisi dengan nama UMKM, kategori, dan bio</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">3</div>
+    <div class="step-title">
+      <h3>Upload Foto Profil dan Cover Photo</h3>
+      <p>Setelah page dibuat, langsung lengkapi dengan foto profil (logo) dan cover photo. Page tanpa foto terlihat tidak profesional.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="small-card">
+      <h4>📷 Foto Profil</h4>
+      <p><strong>Ukuran ideal:</strong> 180 × 180 px (ditampilkan 40px di iklan)<br><br><strong>Yang cocok:</strong> Logo bisnis, atau foto produk unggulan<br><br><strong>Format:</strong> JPG atau PNG<br><br><em>Pastikan tidak ada teks terlalu kecil karena akan dikrop jadi lingkaran</em></p>
+    </div>
+    <div class="small-card">
+      <h4>🖼️ Cover Photo</h4>
+      <p><strong>Ukuran ideal:</strong> 820 × 312 px (desktop)<br><br><strong>Yang cocok:</strong> Foto produk, banner promo, atau tagline<br><br><strong>Format:</strong> JPG atau PNG<br><br><em>Area tengah adalah yang paling aman — hindari teks di tepi kiri/kanan</em></p>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot Facebook Page UMKM yang sudah lengkap dengan foto profil, cover photo, dan informasi bisnis</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 3: MASUK ADS MANAGER -->
+<div class="section-header page-break">
+  <div class="section-num">Bagian 3 dari 8</div>
+  <h2>Masuk ke Meta Ads Manager</h2>
+  <p>Ini command center-nya. Semua campaign dibuat, dimonitor, dan dioptimasi dari sini.</p>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">4</div>
+    <div class="step-title">
+      <h3>Akses Meta Ads Manager</h3>
+      <p>Ada dua cara masuk: lewat browser langsung, atau lewat Meta Business Suite.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="highlight-box">
+      <h4>Cara 1 — Direct URL (Lebih Cepat)</h4>
+      <p>Buka browser → ketik di address bar:<br><br><strong style="font-size:16px;font-family:monospace;">adsmanager.facebook.com</strong><br><br>Login dengan akun Facebook kamu. Langsung masuk ke dashboard Ads Manager.</p>
+    </div>
+    <div class="small-card">
+      <h4>Cara 2 — Via Meta Business Suite</h4>
+      <p>1. Buka <strong>business.facebook.com</strong><br>2. Login dengan akun Facebook<br>3. Di menu kiri, klik <strong>"Ads"</strong> atau <strong>"Ads Manager"</strong><br>4. Akan redirect ke Ads Manager</p>
+    </div>
+  </div>
+
+  <div class="mockup" style="margin-top:16px;">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">adsmanager.facebook.com</div>
+    </div>
+    <div class="mockup-body">
+      <div class="meta-nav">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="meta-nav-logo">Meta</div>
+          <div style="color:rgba(255,255,255,0.8);font-size:13px;">Ads Manager</div>
+        </div>
+        <div class="meta-nav-right">
+          <div class="meta-nav-btn">HUNGR. Food ▾</div>
+          <div class="meta-nav-btn">❓</div>
+        </div>
+      </div>
+      <div style="padding:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <div style="font-size:20px;font-weight:800;">Campaign</div>
+          <button class="meta-btn meta-btn-green">+ Create</button>
+        </div>
+        <div style="display:flex;gap:0;border-bottom:2px solid #e4e6ea;margin-bottom:16px;">
+          <div style="padding:10px 16px;font-size:13px;border-bottom:2px solid #1877F2;color:#1877F2;font-weight:700;margin-bottom:-2px;">Campaigns</div>
+          <div style="padding:10px 16px;font-size:13px;color:#606770;">Ad Sets</div>
+          <div style="padding:10px 16px;font-size:13px;color:#606770;">Ads</div>
+        </div>
+        <div style="text-align:center;padding:40px;color:#606770;">
+          <div style="font-size:40px;margin-bottom:12px;">📊</div>
+          <div style="font-size:15px;font-weight:600;margin-bottom:6px;">Belum ada campaign</div>
+          <div style="font-size:13px;margin-bottom:16px;">Klik "+ Create" untuk membuat campaign pertama kamu</div>
+          <button class="meta-btn">+ Create Campaign</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot halaman utama Meta Ads Manager saat pertama kali dibuka</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">5</div>
+    <div class="step-title">
+      <h3>Tambahkan Metode Pembayaran</h3>
+      <p>Sebelum iklan bisa running, meta butuh metode pembayaran. Setting ini dilakukan sekali dan berlaku untuk semua campaign.</p>
+    </div>
+  </div>
+
+  <div class="flow-steps">
+    <div class="flow-step">Klik ⚙️ Settings</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Billing & Payments</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Payment Methods</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Add Payment Method</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Isi data kartu</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Save ✓</div>
+  </div>
+
+  <div class="two-col">
+    <div class="info-box tip">
+      <div class="info-box-icon">💳</div>
+      <div class="info-box-content">
+        <strong>Kartu yang bisa digunakan di Indonesia:</strong>
+        Visa/Mastercard (debit atau kredit), PayPal, dan beberapa e-wallet lokal. Kartu GPN (merah/putih) biasanya tidak bisa — gunakan kartu yang punya logo Visa/Mastercard.
+      </div>
+    </div>
+    <div class="info-box warning">
+      <div class="info-box-icon">⚠️</div>
+      <div class="info-box-content">
+        <strong>Sistem Billing Meta:</strong>
+        Meta tidak langsung debit setiap hari. Ada "billing threshold" — ditagih saat spend mencapai batas tertentu (biasanya Rp 150.000 atau Rp 300.000 pertama). Setelah itu billing cycle otomatis.
+      </div>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot halaman Billing & Payments setelah berhasil menambahkan metode pembayaran</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 4: MEMBUAT CAMPAIGN -->
+<div class="section-header page-break">
+  <div class="section-num">Bagian 4 dari 8</div>
+  <h2>Membuat Campaign — Level Pertama</h2>
+  <p>Campaign adalah "kontainer" teratas. Di sini kamu menentukan satu hal paling penting: TUJUAN iklan.</p>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">6</div>
+    <div class="step-title">
+      <h3>Klik "+ Create" untuk Memulai Campaign Baru</h3>
+      <p>Dari halaman utama Ads Manager, klik tombol hijau "+ Create" di pojok kanan atas area campaign.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">adsmanager.facebook.com/adsmanager/creation</div>
+    </div>
+    <div class="mockup-body" style="padding:24px;">
+      <div style="font-size:20px;font-weight:800;margin-bottom:6px;">Buat Campaign Baru</div>
+      <div style="font-size:13px;color:#606770;margin-bottom:20px;">Pilih objective yang sesuai dengan tujuan bisnis kamu</div>
+      <div class="objective-grid">
+        <div class="obj-card selected">
+          <div class="obj-icon">📢</div>
+          <div class="obj-name">Awareness</div>
+          <div class="obj-desc">Jangkau orang yang mungkin tertarik dengan bisnis kamu</div>
+        </div>
+        <div class="obj-card" style="border-color:#1877F2;background:#EBF5FB;">
+          <div class="obj-icon">🔗</div>
+          <div class="obj-name">Traffic</div>
+          <div class="obj-desc" style="color:#1877F2;font-weight:600;">← PILIH INI untuk kirim orang ke WA/website/link</div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-icon">❤️</div>
+          <div class="obj-name">Engagement</div>
+          <div class="obj-desc">Perbanyak interaksi: like, comment, follower</div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-icon">📋</div>
+          <div class="obj-name">Leads</div>
+          <div class="obj-desc">Kumpulkan kontak calon pelanggan</div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-icon">📱</div>
+          <div class="obj-name">App Promotion</div>
+          <div class="obj-desc">Dorong install atau penggunaan aplikasi</div>
+        </div>
+        <div class="obj-card">
+          <div class="obj-icon">🛒</div>
+          <div class="obj-name">Sales</div>
+          <div class="obj-desc">Butuh Pixel di website. Tidak wajib untuk sesi ini.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box danger">
+    <div class="info-box-icon">🚨</div>
+    <div class="info-box-content">
+      <strong>Pilihan Objective TIDAK BISA diubah setelah campaign dibuat.</strong>
+      Jika salah pilih objective, kamu harus buat campaign baru dari awal. Pastikan tujuanmu jelas sebelum klik. Untuk UMKM yang mau order via WhatsApp: pilih <strong>Traffic → Messaging Apps</strong>.
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot halaman pemilihan objective — tunjukkan objective mana yang kamu pilih untuk UMKM kamu</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">7</div>
+    <div class="step-title">
+      <h3>Beri Nama Campaign dan Atur Setting Dasar</h3>
+      <p>Setelah pilih objective, kamu akan diminta mengisi nama campaign dan beberapa setting dasar.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">adsmanager.facebook.com — Campaign Setup</div>
+    </div>
+    <div class="mockup-body" style="padding:24px;">
+      <div style="display:flex;gap:24px;">
+        <div style="flex:1;">
+          <div class="meta-form-group">
+            <label>Nama Campaign *</label>
+            <div class="meta-input" style="color:#1877F2;font-weight:600;">HUNGR-TRF-Apr2026</div>
+            <div style="font-size:11px;color:#606770;margin-top:4px;">Format: [UMKM]-[Objective]-[Bulan Tahun]</div>
+          </div>
+          <div class="meta-form-group">
+            <label>Special Ad Categories</label>
+            <div class="meta-input">None — No special category</div>
+            <div style="font-size:11px;color:#606770;margin-top:4px;">Pilih "None" kecuali iklan untuk kredit, pekerjaan, atau perumahan</div>
+          </div>
+          <div class="meta-form-group">
+            <label>Campaign Budget Optimization (CBO)</label>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#f8f9fa;border-radius:6px;border:1px solid #ddd;">
+              <div style="width:36px;height:20px;background:#ddd;border-radius:10px;position:relative;">
+                <div style="width:16px;height:16px;background:white;border-radius:50%;position:absolute;top:2px;left:2px;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>
+              </div>
+              <span style="font-size:13px;">Off — Atur budget di level Ad Set (recommended untuk pemula)</span>
+            </div>
+          </div>
+        </div>
+        <div style="width:200px;background:#f8f9fa;border-radius:10px;padding:16px;">
+          <div style="font-size:12px;font-weight:700;color:#1877F2;margin-bottom:10px;">💡 Naming Tips</div>
+          <div style="font-size:12px;color:#606770;line-height:1.8;">
+            <strong>UMKM:</strong> Nama singkat<br>
+            <strong>OBJ:</strong> TRF / ENG / AWR / LDS<br>
+            <strong>Date:</strong> Apr2026<br><br>
+            Contoh:<br>
+            HUNGR-TRF-Apr2026<br>
+            GTX-LDS-Apr2026<br>
+            PIZZA-ENG-Apr2026
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot form Campaign Setup yang sudah diisi dengan nama campaign kamu</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 5: AD SET -->
+<div class="section-header page-break">
+  <div class="section-num">Bagian 5 dari 8</div>
+  <h2>Setup Ad Set — Siapa, Di Mana, Berapa</h2>
+  <p>Ini level paling kritis. Di sinilah kamu "menemukan" target audiensmu. Salah di sini = uang terbuang.</p>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">8</div>
+    <div class="step-title">
+      <h3>Beri Nama Ad Set dan Set Conversion Location</h3>
+      <p>Setelah setup campaign, kamu otomatis masuk ke level Ad Set. Pertama, beri nama dan tentukan ke mana traffic diarahkan.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">adsmanager.facebook.com — Ad Set Setup</div>
+    </div>
+    <div class="mockup-body" style="padding:24px;display:grid;grid-template-columns:1fr 280px;gap:20px;">
+      <div>
+        <div class="meta-form-group">
+          <label>Nama Ad Set *</label>
+          <div class="meta-input" style="color:#1877F2;font-weight:600;">MHS-18-25-MDH</div>
+          <div style="font-size:11px;color:#606770;margin-top:4px;">Format: [Target Audience]-[Usia]-[Lokasi]</div>
+        </div>
+        <div class="meta-form-group">
+          <label>Conversion Location (untuk Traffic objective)</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;">
+            <div style="border:2px solid #ddd;border-radius:8px;padding:10px;font-size:12px;">🌐 Website</div>
+            <div style="border:2px solid #1877F2;background:#EBF5FB;border-radius:8px;padding:10px;font-size:12px;color:#1877F2;font-weight:700;">💬 Messaging Apps ← PILIH INI (jika WA)</div>
+            <div style="border:2px solid #ddd;border-radius:8px;padding:10px;font-size:12px;">📱 App</div>
+            <div style="border:2px solid #ddd;border-radius:8px;padding:10px;font-size:12px;">📞 Calls</div>
+          </div>
+        </div>
+        <div class="meta-form-group" style="margin-top:12px;">
+          <label>Messaging App</label>
+          <div class="meta-input">WhatsApp ▾</div>
+          <div style="font-size:11px;color:#606770;margin-top:4px;">Pastikan WA nomor bisnis sudah terhubung ke Page</div>
+        </div>
+      </div>
+      <div style="background:#f8f9fa;border-radius:10px;padding:16px;">
+        <div style="font-size:12px;font-weight:700;color:#606770;margin-bottom:10px;">AUDIENCE ESTIMATE</div>
+        <div class="audience-meter">
+          <div class="meter-label">Ukuran Audience</div>
+          <div class="meter-bar"><div class="meter-fill" style="width:60%"></div></div>
+          <div class="meter-values"><span>Terlalu Spesifik</span><span>Bagus</span><span>Terlalu Luas</span></div>
+        </div>
+        <div class="audience-est">
+          Estimasi jangkauan harian:<br>
+          <strong>Menunggu audience diisi...</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot bagian atas Ad Set setup — nama Ad Set dan Conversion Location yang sudah dipilih</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">9</div>
+    <div class="step-title">
+      <h3>Set Lokasi Target Audience</h3>
+      <p>Tentukan di mana audience kamu berada. Untuk bisnis lokal, gunakan fitur radius dari titik tertentu.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">adsmanager.facebook.com — Audience: Location</div>
+    </div>
+    <div class="mockup-body" style="padding:24px;">
+      <div style="font-size:15px;font-weight:700;margin-bottom:16px;border-bottom:1px solid #eee;padding-bottom:10px;">📍 Locations</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div>
+          <div class="meta-form-group">
+            <label>Include</label>
+            <div class="meta-input" style="display:flex;gap:8px;align-items:center;">
+              <span>🔍</span> <span style="color:#999;">Ketik nama kota atau negara...</span>
+            </div>
+          </div>
+          <div style="background:#EBF5FB;border:1px solid #1877F2;border-radius:8px;padding:12px;margin-top:6px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#1877F2;">📍 Denpasar, Bali, Indonesia</div>
+                <div style="font-size:11px;color:#606770;margin-top:4px;">Radius: 2 km · People currently in this location</div>
+              </div>
+              <div style="color:#E74C3C;cursor:pointer;">✕</div>
+            </div>
+            <div style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+              <input type="range" style="flex:1;" value="30" min="1" max="80">
+              <span style="font-size:12px;font-weight:700;color:#1877F2;width:60px;">2 km</span>
+            </div>
+          </div>
+          <div class="meta-form-group" style="margin-top:14px;">
+            <label>Location Type</label>
+            <div class="meta-select" style="font-size:13px;padding:8px 12px;">
+              ✓ People currently in this location (RECOMMENDED untuk bisnis lokal)
+            </div>
+          </div>
+        </div>
+        <div style="background:#f8f9fa;border-radius:10px;padding:16px;">
+          <div style="height:150px;background:linear-gradient(135deg,#a8d5a2,#7ec8a4);border-radius:8px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+            <div style="text-align:center;color:white;text-shadow:0 1px 3px rgba(0,0,0,0.5);">
+              <div style="font-size:11px;font-weight:700;">MAP PREVIEW</div>
+              <div style="font-size:40px;">📍</div>
+              <div style="font-size:11px;">INSTIKI + 2km radius</div>
+            </div>
+            <div style="position:absolute;width:80px;height:80px;border:3px solid rgba(255,255,255,0.8);border-radius:50%;"></div>
+          </div>
+          <div style="margin-top:10px;font-size:12px;color:#606770;text-align:center;">Radius coverage sekitar MDH</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box info">
+    <div class="info-box-icon">📍</div>
+    <div class="info-box-content">
+      <strong>Cara set radius dari lokasi spesifik (bukan hanya kota):</strong>
+      Ketik nama jalan atau area di kotak pencarian lokasi → pilih dari hasil → setelah ditambahkan, akan muncul slider radius. Meta minimum radius adalah <strong>1 mile (~1.6km)</strong>. Tidak bisa lebih kecil dari itu.
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot bagian Location di Ad Set — tunjukkan lokasi yang sudah dipilih beserta radius dan location type-nya</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">10</div>
+    <div class="step-title">
+      <h3>Set Usia, Gender, dan Detailed Targeting (Interests)</h3>
+      <p>Ini yang membuat Meta Ads lebih powerful dari platform lain. Kamu bisa temukan orang berdasarkan minat dan perilaku mereka.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">adsmanager.facebook.com — Audience: Demographics & Interests</div>
+    </div>
+    <div class="mockup-body" style="padding:24px;">
+      <div style="display:grid;grid-template-columns:1fr 280px;gap:20px;">
+        <div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:16px;border-bottom:1px solid #eee;padding-bottom:10px;">👥 Demographics</div>
+          <div class="meta-form-group">
+            <label>Age Range</label>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="meta-select" style="width:100px;">18 ▾</div>
+              <span style="color:#606770;">—</span>
+              <div class="meta-select" style="width:100px;">28 ▾</div>
+            </div>
+          </div>
+          <div class="meta-form-group">
+            <label>Gender</label>
+            <div style="display:flex;gap:10px;">
+              <div style="border:2px solid #1877F2;background:#EBF5FB;border-radius:6px;padding:6px 14px;font-size:12px;color:#1877F2;font-weight:700;">✓ All</div>
+              <div style="border:2px solid #ddd;border-radius:6px;padding:6px 14px;font-size:12px;color:#606770;">Men</div>
+              <div style="border:2px solid #ddd;border-radius:6px;padding:6px 14px;font-size:12px;color:#606770;">Women</div>
+            </div>
+          </div>
+          <div style="font-size:15px;font-weight:700;margin:16px 0 10px;border-top:1px solid #eee;padding-top:16px;">🎯 Detailed Targeting</div>
+          <div class="meta-form-group">
+            <label>Add interests, behaviors, or demographics</label>
+            <div class="meta-input" style="display:flex;gap:8px;align-items:center;">
+              <span>🔍</span> <span style="color:#999;">Search interests...</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
+            <div style="background:#EBF5FB;border:1px solid #1877F2;border-radius:14px;padding:4px 12px;font-size:12px;color:#1877F2;display:flex;align-items:center;gap:4px;">Student life <span style="color:#E74C3C;">✕</span></div>
+            <div style="background:#EBF5FB;border:1px solid #1877F2;border-radius:14px;padding:4px 12px;font-size:12px;color:#1877F2;display:flex;align-items:center;gap:4px;">Indonesian food <span style="color:#E74C3C;">✕</span></div>
+            <div style="background:#EBF5FB;border:1px solid #1877F2;border-radius:14px;padding:4px 12px;font-size:12px;color:#1877F2;display:flex;align-items:center;gap:4px;">Food delivery <span style="color:#E74C3C;">✕</span></div>
+            <div style="background:#EBF5FB;border:1px solid #1877F2;border-radius:14px;padding:4px 12px;font-size:12px;color:#1877F2;display:flex;align-items:center;gap:4px;">+ Add more</div>
+          </div>
+          <div style="margin-top:10px;padding:10px;background:#f8f9fa;border-radius:6px;font-size:12px;color:#606770;">
+            💡 Klik "Suggestions" di bawah kotak search untuk mendapat rekomendasi interest yang relevan
+          </div>
+        </div>
+        <div>
+          <div style="background:#f8f9fa;border-radius:10px;padding:16px;">
+            <div style="font-size:12px;font-weight:700;color:#606770;margin-bottom:10px;">AUDIENCE SIZE</div>
+            <div class="audience-meter">
+              <div class="meter-bar"><div class="meter-fill" style="width:45%"></div></div>
+              <div class="meter-values"><span>Specific</span><span style="color:#42B72A;font-weight:700;">Sweet Spot</span><span>Broad</span></div>
+            </div>
+            <div class="audience-est" style="margin-top:14px;">
+              Estimasi reach per hari:<br>
+              <strong>800 – 2,400 orang</strong><br>
+              <span style="font-size:11px;color:#42B72A;">✓ Ukuran bagus untuk UMKM lokal</span>
+            </div>
+            <div style="margin-top:10px;font-size:11px;color:#606770;border-top:1px solid #ddd;padding-top:10px;">
+              Total audience size:<br>
+              <strong style="color:#1c1e21;">~15,000 – 45,000 orang</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot bagian Detailed Targeting yang sudah diisi dengan interests yang relevan untuk UMKM kamu. Pastikan Audience Size Meter terlihat di screenshot.</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">11</div>
+    <div class="step-title">
+      <h3>Set Budget dan Jadwal Tayang</h3>
+      <p>Tentukan berapa uang yang mau dikeluarkan per hari dan berapa lama iklan berjalan.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">adsmanager.facebook.com — Budget & Schedule</div>
+    </div>
+    <div class="mockup-body" style="padding:24px;">
+      <div style="font-size:15px;font-weight:700;margin-bottom:16px;border-bottom:1px solid #eee;padding-bottom:10px;">💰 Budget & Schedule</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+        <div>
+          <div class="meta-form-group">
+            <label>Budget Type</label>
+            <div class="budget-toggle">
+              <div class="budget-toggle-btn active">Daily Budget</div>
+              <div class="budget-toggle-btn">Lifetime Budget</div>
+            </div>
+            <div style="font-size:11px;color:#606770;">Daily Budget = batas maks per hari (recommended untuk pemula)</div>
+          </div>
+          <div class="meta-form-group">
+            <label>Daily Budget Amount</label>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="background:#f8f9fa;border:1px solid #ddd;padding:8px 12px;border-radius:6px;font-size:13px;font-weight:700;color:#606770;">IDR</div>
+              <div class="meta-input" style="font-size:18px;font-weight:700;color:#1877F2;">30,000</div>
+            </div>
+            <div style="font-size:11px;color:#606770;margin-top:4px;">Min. IDR 20,000/hari. Disarankan IDR 30,000-50,000 untuk data awal.</div>
+          </div>
+          <div class="meta-form-group">
+            <label>Schedule</label>
+            <div style="background:#f8f9fa;border-radius:8px;padding:12px;font-size:13px;">
+              <div style="display:flex;gap:8px;margin-bottom:8px;">
+                <div style="background:#1877F2;color:white;padding:4px 10px;border-radius:4px;font-size:12px;">● Start: 16 April 2026</div>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <div style="background:#E74C3C;color:white;padding:4px 10px;border-radius:4px;font-size:12px;">■ End: 22 April 2026 (7 hari)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="background:#f8f9fa;border-radius:10px;padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#1877F2;margin-bottom:12px;">📊 Estimated Results</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div style="background:white;border-radius:8px;padding:12px;text-align:center;border:1px solid #e4e6ea;">
+                <div style="font-size:20px;font-weight:800;color:#1877F2;">800–2,400</div>
+                <div style="font-size:11px;color:#606770;">Reach / hari</div>
+              </div>
+              <div style="background:white;border-radius:8px;padding:12px;text-align:center;border:1px solid #e4e6ea;">
+                <div style="font-size:20px;font-weight:800;color:#42B72A;">5–15</div>
+                <div style="font-size:11px;color:#606770;">Klik / hari</div>
+              </div>
+            </div>
+            <div style="margin-top:12px;font-size:11px;color:#606770;text-align:center;">
+              Total budget 7 hari: <strong style="color:#E74C3C;">IDR 210,000</strong>
+            </div>
+          </div>
+          <div class="info-box tip" style="margin-top:12px;">
+            <div class="info-box-icon">💡</div>
+            <div class="info-box-content" style="font-size:12px;">
+              <strong>Minimum 5 hari untuk data yang cukup.</strong>
+              3 hari pertama Meta masih "belajar" (learning phase). Data baru stabil di hari 4–7.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot bagian Budget & Schedule — tunjukkan daily budget yang diset, tanggal mulai dan berakhir, serta estimasi hasil di panel kanan</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">12</div>
+    <div class="step-title">
+      <h3>Set Placement (Di Mana Iklan Ditampilkan)</h3>
+      <p>Placement menentukan iklan muncul di mana — FB Feed, IG Feed, Stories, Reels, dll.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="highlight-box">
+      <h4>Untuk Pemula: Gunakan Advantage+ Placements</h4>
+      <p>Biarkan Meta yang otomatis pilih placement terbaik berdasarkan performa. Meta akan otomatis distribusikan budget ke placement yang paling efektif.<br><br><strong>Ini yang direkomendasikan untuk Praktikum ini.</strong></p>
+    </div>
+    <div class="small-card">
+      <h4>Manual Placement (Advanced)</h4>
+      <p>Bisa pilih platform spesifik: Facebook saja, Instagram saja, atau keduanya.<br><br>Bisa pilih placement spesifik: Feed, Stories, Reels, Marketplace, dsb.<br><br><em>Gunakan ini hanya jika sudah punya data performa per placement sebelumnya.</em></p>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot bagian Placements — tunjukkan bahwa Advantage+ Placements sudah dipilih</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 6: AD CREATIVE -->
+<div class="section-header page-break">
+  <div class="section-num">Bagian 6 dari 8</div>
+  <h2>Membuat Ad — Creative, Copy, dan CTA</h2>
+  <p>Ini yang dilihat oleh audience. Sehebat apapun targeting, kalau creative-nya buruk, orang tidak akan berhenti scroll.</p>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">13</div>
+    <div class="step-title">
+      <h3>Beri Nama Ad dan Pilih Facebook Page</h3>
+      <p>Setelah Ad Set, kamu masuk ke level Ad. Pertama, beri nama dan pilih page yang akan jadi "pengirim" iklan ini.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">adsmanager.facebook.com — Ad Setup</div>
+    </div>
+    <div class="mockup-body" style="padding:24px;">
+      <div class="meta-form-group">
+        <label>Nama Ad *</label>
+        <div class="meta-input" style="color:#1877F2;font-weight:600;">REEL-V1-OrderWA</div>
+        <div style="font-size:11px;color:#606770;margin-top:4px;">Format: [Format]-[Versi]-[CTA]</div>
+      </div>
+      <div class="meta-form-group">
+        <label>Identity — Facebook Page</label>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px;background:#f8f9fa;border-radius:8px;border:1px solid #e4e6ea;">
+          <div style="width:36px;height:36px;background:#1877F2;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;">H</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;">HUNGR. Food</div>
+            <div style="font-size:11px;color:#606770;">Facebook Page</div>
+          </div>
+          <div style="margin-left:auto;font-size:12px;color:#1877F2;font-weight:600;">Change ▾</div>
+        </div>
+      </div>
+      <div class="meta-form-group">
+        <label>Instagram Account (Optional)</label>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px;background:#f8f9fa;border-radius:8px;border:1px solid #e4e6ea;">
+          <div style="width:36px;height:36px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;">H</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;">@hungr.food</div>
+            <div style="font-size:11px;color:#606770;">Instagram Account</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#606770;margin-top:4px;">Jika tidak ada, iklan di IG akan tampil atas nama Facebook Page kamu</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">14</div>
+    <div class="step-title">
+      <h3>Pilih Format Ad dan Upload Creative</h3>
+      <p>Pilih apakah iklan menggunakan gambar tunggal, video, carousel, atau format lainnya. Lalu upload file creative-nya.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">adsmanager.facebook.com — Ad Creative</div>
+    </div>
+    <div class="mockup-body" style="padding:24px;display:grid;grid-template-columns:1fr 240px;gap:20px;">
+      <div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:14px;">Ad Format</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;">
+          <div style="border:2px solid #1877F2;background:#EBF5FB;border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:24px;margin-bottom:4px;">🖼️</div>
+            <div style="font-size:12px;font-weight:700;color:#1877F2;">Single Image</div>
+            <div style="font-size:10px;color:#1877F2;">✓ DIPILIH</div>
+          </div>
+          <div style="border:2px solid #ddd;border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:24px;margin-bottom:4px;">🎬</div>
+            <div style="font-size:12px;font-weight:700;">Single Video</div>
+            <div style="font-size:10px;color:#606770;">Reels, Story</div>
+          </div>
+          <div style="border:2px solid #ddd;border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:24px;margin-bottom:4px;">🎠</div>
+            <div style="font-size:12px;font-weight:700;">Carousel</div>
+            <div style="font-size:10px;color:#606770;">Multiple images</div>
+          </div>
+        </div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:14px;">Media</div>
+        <div style="border:2px dashed #1877F2;border-radius:10px;padding:24px;text-align:center;background:#EBF5FB;">
+          <div style="font-size:32px;margin-bottom:8px;">📤</div>
+          <div style="font-size:13px;font-weight:700;color:#1877F2;margin-bottom:4px;">Upload Image</div>
+          <div style="font-size:11px;color:#606770;margin-bottom:12px;">JPG, PNG · Ukuran ideal: 1080×1080px · Max 30MB</div>
+          <button class="meta-btn" style="font-size:12px;">Select File</button>
+          <span style="font-size:12px;color:#606770;margin:0 8px;">atau</span>
+          <button class="meta-btn meta-btn-outline" style="font-size:12px;">Browse Library</button>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#606770;margin-bottom:10px;">AD PREVIEW</div>
+        <div style="border:1px solid #ddd;border-radius:10px;overflow:hidden;">
+          <div style="background:#f0f2f5;padding:8px;font-size:10px;color:#606770;display:flex;align-items:center;gap:6px;">
+            <div style="width:24px;height:24px;background:#1877F2;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:800;">H</div>
+            <div><strong>HUNGR. Food</strong><br>Sponsored ·</div>
+          </div>
+          <div style="background:#e8e8e8;height:120px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#aaa;">🖼️<br><span style="font-size:10px;">Image preview</span></div>
+          <div style="padding:8px;font-size:10px;">
+            <div style="font-weight:700;">Lapar Malam? Kita Antar ke Kamu 🛵</div>
+            <div style="color:#606770;font-size:9px;margin-top:2px;">hungr.food</div>
+            <div style="background:#1877F2;color:white;padding:4px 8px;border-radius:4px;font-size:9px;font-weight:700;display:inline-block;margin-top:6px;">Send Message</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="small-card">
+      <h4>🖼️ Gambar — Best Practices</h4>
+      <p>Ukuran: 1080×1080px (square)<br>Teks di gambar: max 20% area<br>Hindari gambar buram/gelap<br>Gunakan warna kontras tinggi<br>Produk harus jelas terlihat</p>
+    </div>
+    <div class="small-card">
+      <h4>🎬 Video — Best Practices</h4>
+      <p>Durasi ideal: 15–30 detik<br>Hook kuat di 3 detik pertama<br>Tambahkan subtitle (80% nonton tanpa suara)<br>Format: MP4/MOV<br>Resolusi min: 1080×1080px</p>
+    </div>
+    <div class="small-card">
+      <h4>🚫 Yang Tidak Boleh</h4>
+      <p>Terlalu banyak teks di gambar<br>Klaim tidak berdasar ("Terbaik!")<br>Gambar menyesatkan<br>Before/after body yang dramatis<br>Logo/brand orang lain tanpa izin</p>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot setelah creative berhasil diupload — termasuk preview iklan di panel kanan</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">15</div>
+    <div class="step-title">
+      <h3>Tulis Ad Copy — Primary Text, Headline, dan CTA</h3>
+      <p>Ini teks yang akan dibaca audience. Harus menarik perhatian, relevan, dan punya call-to-action yang jelas.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">adsmanager.facebook.com — Ad Copy</div>
+    </div>
+    <div class="mockup-body" style="padding:24px;">
+      <div class="meta-form-group">
+        <label>Primary Text (yang pertama muncul di atas gambar)</label>
+        <div style="border:1px solid #1877F2;border-radius:8px;padding:12px;font-size:13px;color:#1c1e21;background:#FAFFFE;min-height:80px;">
+          Udah pukul 10 malem dan belum makan? 😅<br><br>
+          HUNGR. siap antar nasi goreng, mie, dan kwetiau langsung ke kosmu dalam 20 menit. Free ongkir sampai 3km!<br><br>
+          Order sekarang lewat DM atau WhatsApp 👇
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#606770;margin-top:4px;">
+          <span>Optimal: 125 karakter. Lebih dari itu akan dipotong dengan "...more"</span>
+          <span>247 karakter</span>
+        </div>
+      </div>
+      <div class="meta-form-group">
+        <label>Headline (tampil di bawah gambar, lebih besar)</label>
+        <div class="meta-input" style="font-weight:600;">Lapar Malam? Kita Antar ke Kamu 🛵</div>
+        <div style="font-size:11px;color:#606770;margin-top:4px;">Max 40 karakter. Harus langsung menarik perhatian.</div>
+      </div>
+      <div class="meta-form-group">
+        <label>Description (opsional, muncul di bawah headline)</label>
+        <div class="meta-input">Nasi Goreng, Mie, Kwetiau — Free Ongkir 3km</div>
+      </div>
+      <div class="meta-form-group">
+        <label>Call to Action Button</label>
+        <div class="meta-select">Send Message ▾</div>
+        <div style="font-size:11px;color:#606770;margin-top:4px;">Pilihan: Send Message, Shop Now, Learn More, Get Quote, Contact Us, dll.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box tip">
+    <div class="info-box-icon">✍️</div>
+    <div class="info-box-content">
+      <strong>Formula Copywriting yang Efektif: Problem → Agitate → Solve (PAS)</strong><br>
+      <strong>Problem:</strong> Sebutkan masalah yang audience rasakan ("Lapar malam, males keluar")<br>
+      <strong>Agitate:</strong> Perkuat masalahnya ("Antri panjang, mahal, ribet")<br>
+      <strong>Solve:</strong> Tawarkan solusimu ("HUNGR. antar dalam 20 menit, harga mahasiswa")
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot bagian Ad Copy yang sudah diisi lengkap — Primary Text, Headline, Description, dan CTA button yang dipilih</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 7: REVIEW & PUBLISH -->
+<div class="section-header page-break">
+  <div class="section-num">Bagian 7 dari 8</div>
+  <h2>Review & Publish — Cek Sebelum Launch</h2>
+  <p>Sebelum klik Publish, lakukan review menyeluruh. Lebih baik lambat tapi benar daripada cepat tapi harus redo.</p>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">16</div>
+    <div class="step-title">
+      <h3>Review Summary — Cek Semua Level</h3>
+      <p>Meta akan menampilkan ringkasan semua setting sebelum publish. Pastikan semua sudah benar.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">adsmanager.facebook.com — Review</div>
+    </div>
+    <div class="mockup-body" style="padding:24px;">
+      <div style="font-size:18px;font-weight:800;margin-bottom:20px;">Review Your Campaign</div>
+      <div style="display:grid;gap:12px;">
+        <div style="border:1px solid #e4e6ea;border-radius:10px;overflow:hidden;">
+          <div style="background:#EBF5FB;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:13px;font-weight:700;color:#1877F2;">📊 CAMPAIGN: HUNGR-TRF-Apr2026</div>
+            <div style="font-size:12px;color:#1877F2;cursor:pointer;">Edit ✎</div>
+          </div>
+          <div style="padding:12px 16px;font-size:12px;color:#606770;display:flex;gap:20px;">
+            <span>Objective: <strong style="color:#1c1e21;">Traffic → Messaging Apps</strong></span>
+            <span>CBO: <strong style="color:#1c1e21;">Off</strong></span>
+          </div>
+        </div>
+        <div style="border:1px solid #e4e6ea;border-radius:10px;overflow:hidden;">
+          <div style="background:#FFF8E1;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:13px;font-weight:700;color:#F39C12;">🎯 AD SET: MHS-18-25-MDH</div>
+            <div style="font-size:12px;color:#F39C12;cursor:pointer;">Edit ✎</div>
+          </div>
+          <div style="padding:12px 16px;font-size:12px;color:#606770;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+            <span>Lokasi: <strong style="color:#1c1e21;">Denpasar, 2km radius</strong></span>
+            <span>Usia: <strong style="color:#1c1e21;">18–28 tahun, All genders</strong></span>
+            <span>Interests: <strong style="color:#1c1e21;">Student life, Food delivery, Indonesian food</strong></span>
+            <span>Budget: <strong style="color:#1c1e21;">IDR 30,000/hari × 7 hari</strong></span>
+          </div>
+        </div>
+        <div style="border:1px solid #e4e6ea;border-radius:10px;overflow:hidden;">
+          <div style="background:#E8F5E9;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:13px;font-weight:700;color:#27AE60;">📝 AD: REEL-V1-OrderWA</div>
+            <div style="font-size:12px;color:#27AE60;cursor:pointer;">Edit ✎</div>
+          </div>
+          <div style="padding:12px 16px;font-size:12px;color:#606770;">
+            <span>Format: Single Image · Headline: <strong style="color:#1c1e21;">Lapar Malam? Kita Antar ke Kamu 🛵</strong> · CTA: <strong style="color:#1c1e21;">Send Message</strong></span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:20px;display:flex;justify-content:flex-end;gap:12px;">
+        <button class="meta-btn meta-btn-outline">← Back</button>
+        <button class="meta-btn meta-btn-green" style="font-size:15px;padding:10px 24px;">Publish Campaign ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#f8f9fa;border-radius:10px;padding:20px;margin-top:16px;">
+    <div style="font-size:15px;font-weight:700;margin-bottom:14px;">✅ Final Checklist Sebelum Publish</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div style="display:flex;gap:8px;font-size:13px;align-items:flex-start;"><span>☐</span> Campaign objective sudah benar</div>
+      <div style="display:flex;gap:8px;font-size:13px;align-items:flex-start;"><span>☐</span> Nama campaign mengikuti format yang ditentukan</div>
+      <div style="display:flex;gap:8px;font-size:13px;align-items:flex-start;"><span>☐</span> Lokasi dan radius sudah tepat</div>
+      <div style="display:flex;gap:8px;font-size:13px;align-items:flex-start;"><span>☐</span> Usia dan gender sesuai segmentasi</div>
+      <div style="display:flex;gap:8px;font-size:13px;align-items:flex-start;"><span>☐</span> Interest yang diisi relevan dan spesifik</div>
+      <div style="display:flex;gap:8px;font-size:13px;align-items:flex-start;"><span>☐</span> Budget sudah sesuai kesepakatan kelompok</div>
+      <div style="display:flex;gap:8px;font-size:13px;align-items:flex-start;"><span>☐</span> Creative sudah diupload dan terlihat bagus</div>
+      <div style="display:flex;gap:8px;font-size:13px;align-items:flex-start;"><span>☐</span> Primary text, headline, dan CTA sudah benar</div>
+      <div style="display:flex;gap:8px;font-size:13px;align-items:flex-start;"><span>☐</span> Preview iklan sudah dicek di semua placement</div>
+      <div style="display:flex;gap:8px;font-size:13px;align-items:flex-start;"><span>☐</span> Payment method sudah terhubung</div>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot halaman Review sebelum publish — semua tiga level (Campaign, Ad Set, Ad) harus terlihat di screenshot ini</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">17</div>
+    <div class="step-title">
+      <h3>Setelah Publish — Status "In Review"</h3>
+      <p>Setelah klik Publish, iklan tidak langsung jalan. Meta akan review dulu, biasanya 1–24 jam.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">adsmanager.facebook.com — Campaign List</div>
+    </div>
+    <div class="mockup-body" style="padding:20px;">
+      <div style="font-size:18px;font-weight:800;margin-bottom:16px;">Campaign</div>
+      <div style="border:1px solid #e4e6ea;border-radius:8px;overflow:hidden;">
+        <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr 1fr;background:#f8f9fa;padding:10px 16px;font-size:12px;font-weight:700;color:#606770;gap:10px;">
+          <span>Campaign Name</span><span>Status</span><span>Budget</span><span>Reach</span><span>Spend</span>
+        </div>
+        <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr 1fr;padding:12px 16px;font-size:13px;align-items:center;gap:10px;">
+          <span style="font-weight:600;">HUNGR-TRF-Apr2026</span>
+          <span style="background:#FFF3E0;color:#FF9800;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;">⏳ In Review</span>
+          <span>Rp30.000/hari</span>
+          <span style="color:#ccc;">—</span>
+          <span style="color:#ccc;">—</span>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding:12px 16px;background:#FFF3E0;border-radius:8px;border-left:3px solid #FF9800;font-size:13px;color:#856404;">
+        ⏳ <strong>Campaign kamu sedang direview oleh Meta.</strong> Proses ini biasanya memakan waktu 1–24 jam. Setelah disetujui, status akan berubah menjadi "Active" dan iklan akan mulai berjalan.
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="small-card">
+      <h4>Status yang Akan Muncul</h4>
+      <p><strong style="color:#FF9800;">⏳ In Review</strong> — Sedang diperiksa Meta<br><strong style="color:#42B72A;">✅ Active</strong> — Iklan berjalan<br><strong style="color:#E74C3C;">❌ Rejected</strong> — Ditolak, ada yang melanggar kebijakan<br><strong style="color:#9E9E9E;">⏸ Paused</strong> — Dijeda manual oleh kamu</p>
+    </div>
+    <div class="small-card">
+      <h4>Jika Iklan Ditolak (Rejected)</h4>
+      <p>1. Klik nama campaign → lihat pesan error<br>2. Baca alasan penolakan dengan teliti<br>3. Edit bagian yang bermasalah (biasanya copy atau gambar)<br>4. Submit ulang untuk review<br><br><em>Iklan bisa ditolak karena klaim berlebihan, kata-kata tertentu, atau gambar yang tidak sesuai kebijakan.</em></p>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot dashboard campaign setelah publish — tunjukkan status "In Review" atau "Active" jika sudah disetujui</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 8: REPORTING -->
+<div class="section-header page-break">
+  <div class="section-num">Bagian 8 dari 8</div>
+  <h2>Membaca Laporan Performa — Data adalah Segalanya</h2>
+  <p>Iklan sudah jalan? Sekarang saatnya baca data dan pahami apa yang berhasil dan apa yang tidak.</p>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">18</div>
+    <div class="step-title">
+      <h3>Navigasi Dashboard Reporting</h3>
+      <p>Setelah iklan berjalan minimal 1–2 hari, data mulai masuk. Ini cara membacanya.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">adsmanager.facebook.com — Reporting Dashboard</div>
+    </div>
+    <div class="mockup-body" style="padding:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div style="font-size:16px;font-weight:800;">HUNGR-TRF-Apr2026</div>
+        <div style="display:flex;gap:8px;">
+          <div style="background:#f8f9fa;border:1px solid #ddd;padding:6px 12px;border-radius:6px;font-size:12px;">📅 Apr 16–22, 2026 ▾</div>
+          <div style="background:#f8f9fa;border:1px solid #ddd;padding:6px 12px;border-radius:6px;font-size:12px;">Columns: Performance ▾</div>
+          <div style="background:#f8f9fa;border:1px solid #ddd;padding:6px 12px;border-radius:6px;font-size:12px;">Breakdown ▾</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px;">
+        <div style="background:#EBF5FB;border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:#1877F2;">5,240</div>
+          <div style="font-size:10px;color:#606770;">Reach</div>
+        </div>
+        <div style="background:#EBF5FB;border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:#1877F2;">12,480</div>
+          <div style="font-size:10px;color:#606770;">Impressions</div>
+        </div>
+        <div style="background:#FFF8E1;border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:#F39C12;">87</div>
+          <div style="font-size:10px;color:#606770;">Clicks</div>
+        </div>
+        <div style="background:#FFF8E1;border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:#F39C12;">0.7%</div>
+          <div style="font-size:10px;color:#606770;">CTR</div>
+        </div>
+        <div style="background:#E8F5E9;border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:#27AE60;">Rp2.069</div>
+          <div style="font-size:10px;color:#606770;">CPC</div>
+        </div>
+        <div style="background:#E8F5E9;border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:#27AE60;">Rp180k</div>
+          <div style="font-size:10px;color:#606770;">Total Spend</div>
+        </div>
+      </div>
+      <div style="background:#f8f9fa;border-radius:8px;height:80px;display:flex;align-items:flex-end;padding:0 12px 8px;gap:6px;">
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+          <div style="background:#1877F2;width:100%;border-radius:3px 3px 0 0;" style="height:30px;"></div>
+          <div style="width:100%;background:#1877F2;opacity:0.6;border-radius:3px 3px 0 0;height:30px;"></div>
+          <div style="font-size:9px;color:#606770;margin-top:3px;">Apr 16</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+          <div style="width:100%;height:45px;background:#1877F2;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:#606770;margin-top:3px;">Apr 17</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+          <div style="width:100%;height:55px;background:#1877F2;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:#606770;margin-top:3px;">Apr 18</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+          <div style="width:100%;height:40px;background:#1877F2;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:#606770;margin-top:3px;">Apr 19</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+          <div style="width:100%;height:60px;background:#1877F2;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:#606770;margin-top:3px;">Apr 20</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+          <div style="width:100%;height:50px;background:#1877F2;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:#606770;margin-top:3px;">Apr 21</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+          <div style="width:100%;height:35px;background:#1877F2;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:#606770;margin-top:3px;">Apr 22</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot dashboard reporting setelah iklan berjalan minimal 3 hari — pastikan semua metrik utama (Reach, Impressions, CTR, CPC, Spend) terlihat</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">19</div>
+    <div class="step-title">
+      <h3>Cara Baca dan Interpretasi Metrik</h3>
+      <p>Data tanpa interpretasi tidak berguna. Ini panduan membaca angka-angka yang muncul.</p>
+    </div>
+  </div>
+
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px;border-radius:10px;overflow:hidden;">
+    <thead>
+      <tr style="background:#1877F2;color:white;">
+        <th style="padding:12px 16px;text-align:left;">Metrik</th>
+        <th style="padding:12px 16px;text-align:left;">Artinya</th>
+        <th style="padding:12px 16px;text-align:left;">Benchmark Indonesia</th>
+        <th style="padding:12px 16px;text-align:left;">Jika Di Bawah Benchmark</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #eee;">
+        <td style="padding:11px 16px;font-weight:700;color:#1877F2;">Reach</td>
+        <td style="padding:11px 16px;">Jumlah orang unik yang lihat iklan</td>
+        <td style="padding:11px 16px;">Sesuai estimasi saat setup</td>
+        <td style="padding:11px 16px;color:#E74C3C;">Budget terlalu kecil atau audience terlalu sempit</td>
+      </tr>
+      <tr style="background:#f8f9fa;border-bottom:1px solid #eee;">
+        <td style="padding:11px 16px;font-weight:700;color:#1877F2;">CTR</td>
+        <td style="padding:11px 16px;">% yang klik setelah lihat</td>
+        <td style="padding:11px 16px;color:#27AE60;">0.5–2% = Normal<br>2%+ = Bagus</td>
+        <td style="padding:11px 16px;color:#E74C3C;">Creative kurang menarik atau salah audience</td>
+      </tr>
+      <tr style="border-bottom:1px solid #eee;">
+        <td style="padding:11px 16px;font-weight:700;color:#1877F2;">CPC</td>
+        <td style="padding:11px 16px;">Biaya per klik</td>
+        <td style="padding:11px 16px;color:#27AE60;">Rp500–3.000 = Wajar</td>
+        <td style="padding:11px 16px;color:#E74C3C;">Audience terlalu kompetitif, coba ubah interest</td>
+      </tr>
+      <tr style="background:#f8f9fa;border-bottom:1px solid #eee;">
+        <td style="padding:11px 16px;font-weight:700;color:#1877F2;">CPM</td>
+        <td style="padding:11px 16px;">Biaya per 1000 tayangan</td>
+        <td style="padding:11px 16px;color:#27AE60;">Rp5.000–25.000</td>
+        <td style="padding:11px 16px;color:#E74C3C;">Audience sangat niche atau placement kurang efisien</td>
+      </tr>
+      <tr style="border-bottom:1px solid #eee;">
+        <td style="padding:11px 16px;font-weight:700;color:#1877F2;">Frequency</td>
+        <td style="padding:11px 16px;">Rata-rata berapa kali satu orang lihat</td>
+        <td style="padding:11px 16px;color:#27AE60;">2–5x = Ideal</td>
+        <td style="padding:11px 16px;color:#E74C3C;">Jika >7: "ad fatigue" — orang sudah bosan, ganti creative</td>
+      </tr>
+      <tr style="background:#f8f9fa;">
+        <td style="padding:11px 16px;font-weight:700;color:#1877F2;">Results</td>
+        <td style="padding:11px 16px;">Jumlah objective yang tercapai (klik WA, dll)</td>
+        <td style="padding:11px 16px;">Bergantung objective</td>
+        <td style="padding:11px 16px;color:#E74C3C;">CTA kurang kuat atau landing page bermasalah</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot kolom metrik detail di dashboard — pilih "Columns: Performance and Clicks" untuk melihat semua metrik sekaligus</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-header">
+    <div class="step-num">20</div>
+    <div class="step-title">
+      <h3>Export Laporan — Untuk Presentasi dan Evaluasi</h3>
+      <p>Data di dashboard bisa diexport ke Excel/CSV untuk dibuat laporan yang lebih rapi.</p>
+    </div>
+  </div>
+
+  <div class="flow-steps">
+    <div class="flow-step">Buka Ads Manager</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Pilih Campaign</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Klik "Reports" atau ikon ⬇️ Export</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Pilih date range</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Format: CSV atau Excel</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Download ✓</div>
+  </div>
+
+  <div class="two-col" style="margin-top:16px;">
+    <div class="info-box tip">
+      <div class="info-box-icon">📊</div>
+      <div class="info-box-content">
+        <strong>Tips untuk Laporan Akhir:</strong>
+        Export data per hari untuk melihat tren. Bandingkan performance hari 1–3 (learning phase) vs hari 4–7 (optimized phase). Biasanya ada peningkatan signifikan setelah Meta selesai "belajar" audience kamu.
+      </div>
+    </div>
+    <div class="info-box info">
+      <div class="info-box-icon">📱</div>
+      <div class="info-box-content">
+        <strong>Monitor via Meta Business Suite App:</strong>
+        Install Meta Business Suite di HP untuk monitor performa kapan saja. Ada notifikasi real-time jika iklan disetujui, ditolak, atau budget hampir habis.
+      </div>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">SCREENSHOT DISINI</div>
+    <div class="ph-desc">Screenshot proses export laporan — tunjukkan opsi format dan date range yang dipilih</div>
+    <div class="ph-badge">📌 TAMBAHKAN SCREENSHOT ASLI</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- QUICK REFERENCE -->
+<div style="background:linear-gradient(135deg,#1877F2,#0D47A1);border-radius:16px;padding:28px;margin-top:20px;color:white;">
+  <div style="font-size:18px;font-weight:800;margin-bottom:16px;">⚡ Quick Reference — Yang Paling Sering Dibutuhkan</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+    <div>
+      <div style="font-size:12px;font-weight:700;opacity:0.7;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">URLs Penting</div>
+      <div style="font-size:12px;line-height:2;font-family:monospace;background:rgba(255,255,255,0.1);padding:10px;border-radius:6px;">
+        facebook.com<br>
+        business.facebook.com<br>
+        adsmanager.facebook.com<br>
+        facebook.com/ads/library
+      </div>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:700;opacity:0.7;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Ukuran Creative</div>
+      <div style="font-size:12px;line-height:2;background:rgba(255,255,255,0.1);padding:10px;border-radius:6px;">
+        Feed: 1080×1080px (1:1)<br>
+        Portrait: 1080×1350px (4:5)<br>
+        Story/Reels: 1080×1920px<br>
+        Video max: 4GB, H.264
+      </div>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:700;opacity:0.7;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Copy Limits</div>
+      <div style="font-size:12px;line-height:2;background:rgba(255,255,255,0.1);padding:10px;border-radius:6px;">
+        Primary text: 125 char optimal<br>
+        Headline: 40 char max<br>
+        Description: 30 char optimal<br>
+        Text in image: max 20% area
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  <div>MDH — Maharani Digital Hub · Meta Ads Series</div>
+  <div>📌 Tambahkan screenshot asli di setiap placeholder · MDH — Maharani Digital Hub</div>
+</div>
+
+</div><!-- end doc -->
+
+</body>
+</html>
