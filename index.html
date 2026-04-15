@@ -215,6 +215,11 @@ linear-gradient(180deg,#fff5f3,#edd7d2);
 box-shadow: 0 20px 40px rgba(0,0,0,0.05);
 border-right:1px solid rgba(0,0,0,0.04);
 }
+.sidebar h2{
+background:linear-gradient(90deg,#b98576,#d8a29a);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
 
 /* NAV ITEM MICRO */
 .nav-item{
@@ -862,20 +867,59 @@ scroll-behavior:smooth;
 </div><!-- /slides -->
 
 <script>
-let cur = 0, tot = 16;
-const slides = document.querySelectorAll('.slide');
-function go(d) {
-  slides[cur].classList.remove('active');
-  cur = Math.max(0, Math.min(tot-1, cur+d));
-  slides[cur].classList.add('active');
-  document.getElementById('ctr').textContent = (cur+1)+' / '+tot;
-  document.getElementById('prog').style.width = ((cur+1)/tot*100)+'%';
-  window.scrollTo(0,0);
+
+/* SMOOTH SCROLL */
+function go(id){
+document.getElementById(id).scrollIntoView({
+behavior:'smooth',
+block:'start'
+})
 }
-document.addEventListener('keydown', e => {
-  if(e.key==='ArrowRight'||e.key==='ArrowDown') go(1);
-  if(e.key==='ArrowLeft'||e.key==='ArrowUp') go(-1);
-});
+
+/* OBSERVER ANIMATION */
+const observer = new IntersectionObserver((entries)=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting){
+entry.target.classList.add('show')
+}
+})
+},{
+threshold:0.2
+})
+
+document.querySelectorAll('.section').forEach(sec=>{
+observer.observe(sec)
+})
+
+/* ACTIVE NAV */
+const sections = document.querySelectorAll('.section')
+const navItems = document.querySelectorAll('.nav-item')
+
+window.addEventListener('scroll',()=>{
+
+let current=''
+
+sections.forEach(sec=>{
+const top=window.scrollY
+if(top>=sec.offsetTop-200){
+current=sec.getAttribute('id')
+}
+})
+
+navItems.forEach(item=>{
+item.classList.remove('active')
+if(item.getAttribute('onclick').includes(current)){
+item.classList.add('active')
+}
+})
+
+/* PROGRESS BAR */
+const scrollTop = document.documentElement.scrollTop
+const height = document.documentElement.scrollHeight - document.documentElement.clientHeight
+document.getElementById('progress').style.width =
+(scrollTop / height) * 100 + '%'
+
+})
 </script>
 </body>
 </html>
