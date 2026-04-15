@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meta Ads Learning Flow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0f0f0f;
+        --panel: rgba(255, 255, 255, 0.06);
+        --panel-border: rgba(255, 255, 255, 0.16);
+        --text: #f4f6ff;
+        --muted: #bec6de;
+        --accent: #8f9cff;
+        --radius: 18px;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: 'DM Sans', system-ui, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 0% 0%, rgba(125, 141, 255, 0.23), transparent 32%),
+          radial-gradient(circle at 100% 100%, rgba(132, 198, 255, 0.16), transparent 35%),
+          var(--bg);
+      }
+
+      .progress-track {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.08);
+        z-index: 60;
+      }
+
+      .progress-fill {
+        width: 0;
+        height: 100%;
+        background: linear-gradient(90deg, #8f9cff, #54ddae);
+        transition: width .15s linear;
+        will-change: width;
+      }
+
+      .mobile-toggle {
+        display: none;
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 70;
+      }
+
+      .btn {
+        border: 1px solid var(--panel-border);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text);
+        min-height: 38px;
+        padding: 8px 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform .28s ease, filter .28s ease, background-color .28s ease;
+        will-change: transform;
+      }
+
+      .btn:hover { transform: scale(1.05); filter: brightness(1.07); }
+      .btn:active { transform: scale(0.96); }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+        gap: 22px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 22px;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 16px;
+        align-self: start;
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        border-radius: var(--radius);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 18px 30px rgba(0, 0, 0, 0.28);
+        padding: 14px;
+      }
+
+      .logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.18rem;
+        margin: 0 6px 14px;
+      }
+
+      .menu {
+        display: grid;
+        gap: 8px;
+      }
+
+      .menu a {
+        text-decoration: none;
+        color: var(--text);
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid transparent;
+        transition: transform .28s ease, background-color .28s ease, border-color .28s ease;
+        will-change: transform;
+      }
+
+      .menu a:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.09);
+      }
+
+      .menu a.active {
+        background: rgba(143, 156, 255, 0.2);
+        border-color: rgba(143, 156, 255, 0.5);
+      }
+
+      .content {
+        display: grid;
+        gap: 16px;
+      }
+
+      section {
+        border: 1px solid var(--panel-border);
+        border-radius: 20px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.04);
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
+      }
+
+      h1, h2 {
+        font-family: 'Playfair Display', serif;
+        margin-top: 0;
+      }
+
+      p {
+        color: var(--muted);
+        line-height: 1.68;
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+      }
+
+      .card {
+        border: 1px solid var(--panel-border);
+        border-radius: 16px;
+        padding: 14px;
+        background: rgba(255, 255, 255, 0.05);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+        transition: transform .3s ease, box-shadow .3s ease, background-color .3s ease;
+        will-change: transform;
+      }
+
+      .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 26px rgba(0, 0, 0, 0.32);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      .reveal.in-view {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity .42s ease, transform .42s ease;
+        transition-delay: var(--stagger, 0ms);
+      }
+
+      @media (max-width: 940px) {
+        .mobile-toggle { display: inline-flex; }
+
+        .layout {
+          grid-template-columns: 1fr;
+          padding: 66px 14px 20px;
+        }
+
+        .sidebar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          width: 250px;
+          border-radius: 0 18px 18px 0;
+          transform: translateX(-100%);
+          transition: transform .28s ease;
+          z-index: 65;
+        }
+
+        .sidebar.open { transform: translateX(0); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+    <button id="menuBtn" class="btn mobile-toggle" type="button">☰ Menu</button>
+
+    <div class="layout">
+      <aside id="sidebar" class="sidebar">
+        <h2 class="logo">Meta Ads App</h2>
+        <nav class="menu" id="menu">
+          <a href="#intro">Intro</a>
+          <a href="#meta-basics">Meta Basics</a>
+          <a href="#objective">Objective</a>
+          <a href="#audience">Audience</a>
+          <a href="#metrics">Metrics</a>
+          <a href="#flow">Flow</a>
+        </nav>
+      </aside>
+
+      <main class="content" id="content">
+        <section id="intro">
+          <h1>Intro</h1>
+          <p>Ringkasan materi inti praktikum Meta Ads yang dikemas dalam pengalaman belajar modern, terstruktur, dan mudah ditelusuri.</p>
+          <div class="card-grid">
+            <article class="card">
+              <h2>Purpose</h2>
+              <p>Bangun pemahaman strategi beriklan mulai dari fondasi sampai optimasi berbasis data.</p>
+            </article>
+            <article class="card">
+              <h2>Output</h2>
+              <p>Setiap peserta mampu menyusun kampanye yang relevan dengan target bisnis dan audiens.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="meta-basics">
+          <h1>Meta Basics</h1>
+          <div class="card-grid">
+            <article class="card">
+              <h2>Funnel Thinking</h2>
+              <p>Pisahkan objective berdasarkan tahap funnel: TOF (awareness), MOF (consideration), BOF (conversion).</p>
+            </article>
+            <article class="card">
+              <h2>Testing Matrix</h2>
+              <p>Uji satu variabel utama per eksperimen: creative angle, audience, atau penawaran agar insight tidak bias.</p>
+            </article>
+            <article class="card">
+              <h2>Optimization Rhythm</h2>
+              <p>Lakukan evaluasi harian ringan dan evaluasi mendalam setiap 3 hari untuk keputusan scale atau pause.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="objective">
+          <h1>Objective</h1>
+          <div class="card-grid">
+            <article class="card">
+              <h2>Awareness</h2>
+              <p>Fokus jangkauan dan frekuensi agar brand mudah dikenali oleh audiens baru.</p>
+            </article>
+            <article class="card">
+              <h2>Traffic</h2>
+              <p>Optimalkan klik dan kunjungan untuk membawa user ke halaman tujuan.</p>
+            </article>
+            <article class="card">
+              <h2>Conversion</h2>
+              <p>Optimasi event yang bernilai bisnis seperti lead, add to cart, atau purchase.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="audience">
+          <h1>Audience</h1>
+          <div class="card-grid">
+            <article class="card">
+              <h2>Core Audience</h2>
+              <p>Gunakan demografi, minat, dan perilaku untuk segmentasi awal yang relevan.</p>
+            </article>
+            <article class="card">
+              <h2>Custom Audience</h2>
+              <p>Retarget audiens yang sudah berinteraksi dengan aset digital bisnismu.</p>
+            </article>
+            <article class="card">
+              <h2>Lookalike</h2>
+              <p>Perluas jangkauan ke profil pengguna baru yang mirip dengan audiens terbaikmu.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="metrics">
+          <h1>Metrics</h1>
+          <div class="card-grid">
+            <article class="card">
+              <h2>CTR</h2>
+              <p>Menilai seberapa menarik creative dan copy terhadap target audience.</p>
+            </article>
+            <article class="card">
+              <h2>CPM</h2>
+              <p>Menunjukkan biaya untuk seribu impresi, dipengaruhi kompetisi audiens.</p>
+            </article>
+            <article class="card">
+              <h2>CVR</h2>
+              <p>Menilai efektivitas penawaran dan pengalaman halaman tujuan setelah klik.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="flow">
+          <h1>Flow</h1>
+          <div class="card-grid">
+            <article class="card">
+              <h2>1. Strategy</h2>
+              <p>Tentukan objective dan KPI sebelum membuat creative.</p>
+            </article>
+            <article class="card">
+              <h2>2. Build</h2>
+              <p>Susun campaign, ad set, dan ads dengan variabel uji yang jelas.</p>
+            </article>
+            <article class="card">
+              <h2>3. Iterate</h2>
+              <p>Baca data secara berkala lalu lakukan optimasi terukur.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const menuBtn = document.getElementById('menuBtn');
+      const sidebar = document.getElementById('sidebar');
+      const links = Array.from(document.querySelectorAll('#menu a'));
+      const sections = Array.from(document.querySelectorAll('main section'));
+      const progressFill = document.getElementById('progressFill');
+
+      menuBtn.addEventListener('click', () => sidebar.classList.toggle('open'));
+      links.forEach((link) => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 940) sidebar.classList.remove('open');
+        });
+      });
+
+      function updateScrollProgress() {
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const current = window.scrollY;
+        const pct = maxScroll > 0 ? (current / maxScroll) * 100 : 0;
+        progressFill.style.width = `${pct}%`;
+      }
+
+      const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const id = entry.target.id;
+          links.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
+        });
+      }, { rootMargin: '-35% 0px -55% 0px', threshold: 0.01 });
+
+      sections.forEach((section) => sectionObserver.observe(section));
+
+      const revealTargets = Array.from(document.querySelectorAll('section, .card, h1, h2, p'));
+      revealTargets.forEach((el, idx) => {
+        el.classList.add('reveal');
+        el.style.setProperty('--stagger', `${Math.min(260, idx * 35)}ms`);
+      });
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      revealTargets.forEach((el) => revealObserver.observe(el));
+
+      window.addEventListener('scroll', updateScrollProgress, { passive: true });
+      updateScrollProgress();
+    </script>
+  </body>
+</html>

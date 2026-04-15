@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MDH Starter — Interactive Learning Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0f1116;
+        --bg-soft: #141822;
+        --panel: rgba(23, 29, 42, 0.62);
+        --surface: rgba(255, 255, 255, 0.04);
+        --surface-hover: rgba(255, 255, 255, 0.07);
+        --text: #e8ecf8;
+        --muted: #a4acc2;
+        --accent: #8b9bff;
+        --accent-strong: #7588ff;
+        --success: #22c55e;
+        --border: rgba(173, 189, 239, 0.22);
+        --radius: 16px;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body { height: 100%; }
+
+      body {
+        margin: 0;
+        font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(800px 400px at 0% 0%, rgba(112, 132, 255, 0.20), transparent 60%),
+          radial-gradient(700px 380px at 100% 100%, rgba(97, 206, 255, 0.14), transparent 65%),
+          var(--bg);
+        overflow: hidden;
+      }
+
+      body::before,
+      body::after {
+        content: '';
+        position: fixed;
+        border-radius: 999px;
+        filter: blur(70px);
+        opacity: 0.18;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      body::before {
+        width: 240px;
+        height: 240px;
+        top: -80px;
+        left: -50px;
+        background: #8697ff;
+      }
+
+      body::after {
+        width: 280px;
+        height: 280px;
+        right: -100px;
+        bottom: -60px;
+        background: #6cb7ff;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 270px 1fr;
+        height: 100%;
+        position: relative;
+        z-index: 1;
+      }
+
+      .sidebar {
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        backdrop-filter: blur(12px);
+        padding: 22px 14px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 270px;
+        overflow-y: auto;
+        box-shadow: 0 18px 35px rgba(0, 0, 0, 0.28);
+      }
+
+      .brand {
+        font-family: 'Playfair Display', serif;
+        margin: 0 10px 6px;
+        font-size: 1.25rem;
+      }
+
+      .brand-sub {
+        color: var(--muted);
+        margin: 0 10px 18px;
+        font-size: 0.9rem;
+      }
+
+      .nav-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .nav-item {
+        border: 1px solid transparent;
+        color: var(--text);
+        background: transparent;
+        border-radius: 12px;
+        padding: 11px 12px;
+        text-align: left;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+        will-change: transform;
+      }
+
+      .nav-item:hover {
+        transform: translateY(-2px) scale(1.03);
+        background: var(--surface-hover);
+      }
+
+      .nav-item.active {
+        background: rgba(139, 155, 255, 0.18);
+        border-color: rgba(139, 155, 255, 0.42);
+      }
+
+      .main {
+        grid-column: 2;
+        min-width: 0;
+        height: 100%;
+        overflow: auto;
+        padding: 18px 26px 30px;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 8;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 10px;
+        background: rgba(16, 21, 33, 0.75);
+        backdrop-filter: blur(10px);
+        margin-bottom: 14px;
+      }
+
+      .topbar-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .spacer { flex: 1; }
+
+      .btn,
+      .mode {
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        border-radius: 10px;
+        min-height: 38px;
+        padding: 8px 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.3s ease, filter 0.3s ease, background 0.3s ease;
+        will-change: transform;
+      }
+
+      .btn:hover,
+      .mode:hover { transform: scale(1.05); filter: brightness(1.05); }
+      .btn:active,
+      .mode:active { transform: scale(0.96); }
+
+      .progress-wrap { margin-top: 10px; }
+      .progress-meta { font-size: 0.86rem; color: var(--muted); margin-bottom: 6px; }
+      .progress-track {
+        height: 10px;
+        background: rgba(255, 255, 255, 0.09);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        width: 0;
+        height: 100%;
+        background: linear-gradient(90deg, #8b9bff, #58e0a1);
+        transition: width 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+        box-shadow: 0 0 10px rgba(203, 178, 121, 0.6);
+        will-change: width;
+      }
+
+      #app {
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 20px;
+        background: rgba(15, 19, 30, 0.75);
+        min-height: calc(100vh - 130px);
+      }
+
+      #app.is-leaving {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      #app.is-entering {
+        animation: pageIn 360ms ease forwards;
+      }
+
+      @keyframes pageIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      #app h1,
+      #app h2,
+      #app h3 { font-family: 'Playfair Display', serif; letter-spacing: 0.2px; }
+
+      #app p,
+      #app li { color: #d3daf0; line-height: 1.65; }
+
+      .card {
+        border: 1px solid var(--border);
+        background: var(--surface);
+        border-radius: 14px;
+        padding: 14px;
+        margin-top: 12px;
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        will-change: transform;
+      }
+
+      .card:hover {
+        transform: translateY(-6px) scale(1.01);
+        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.28);
+        background: var(--surface-hover);
+      }
+
+      .answer-box {
+        width: 100%;
+        min-height: 110px;
+        resize: none;
+        margin-top: 10px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        padding: 10px;
+        font-size: 0.94rem;
+        line-height: 1.5;
+      }
+
+      .answer-box:focus {
+        outline: none;
+        border-color: rgba(139, 155, 255, 0.65);
+        box-shadow: 0 0 0 4px rgba(139, 155, 255, 0.15);
+      }
+
+      .answer-key { margin-top: 8px; opacity: 0.88; }
+      .hide-answer-keys .answer-key { display: none; }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .reveal.in-view {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 420ms ease, transform 420ms ease;
+        transition-delay: var(--delay, 0ms);
+      }
+
+      .toast {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        background: rgba(17, 21, 32, 0.95);
+        color: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 12px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.24s ease, transform 0.24s ease;
+        pointer-events: none;
+        z-index: 30;
+      }
+      .toast.show { opacity: 1; transform: translateY(0); }
+
+      .mobile-toggle {
+        display: none;
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 40;
+      }
+
+      @media (max-width: 920px) {
+        body { overflow: auto; }
+        .layout { grid-template-columns: 1fr; }
+        .sidebar {
+          transform: translateX(-100%);
+          transition: transform 0.3s ease;
+        }
+        .sidebar.open { transform: translateX(0); }
+        .main {
+          grid-column: 1;
+          padding: 64px 14px 20px;
+        }
+        .mobile-toggle { display: inline-flex; }
+      }
+    </style>
+  </head>
+  <body>
+    <button id="mobileToggle" class="btn mobile-toggle" type="button">☰ Menu</button>
+    <div class="layout">
+      <aside id="sidebar" class="sidebar">
+        <h1 class="brand">MDH Learning Hub</h1>
+        <p class="brand-sub">Interactive Meta Ads Classroom</p>
+        <nav class="nav-list" id="navList"></nav>
+      </aside>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="topbar-row">
+            <button class="mode" id="modeToggle" type="button">Student Mode</button>
+            <button class="btn" id="downloadBtn" type="button">Download Jawaban</button>
+            <button class="btn" id="resetBtn" type="button">Reset Jawaban</button>
+            <div class="spacer"></div>
+            <span id="statusText" style="color: var(--muted); font-size: 0.9rem;">Ready</span>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-meta" id="progressMeta">Progress: 0%</div>
+            <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+          </div>
+        </header>
+
+        <main id="app" aria-live="polite"></main>
+      </div>
+    </div>
+
+    <div id="toast" class="toast">Saved</div>
+
+    <script>
+      const pages = [
+        { id: 'session', label: 'Session Goals', file: 'session.html' },
+        { id: 'slide', label: 'Materi', file: 'slide.html' },
+        { id: 'mission', label: 'Mission', file: 'mission.html' },
+        { id: 'cheat', label: 'Cheat Sheet', file: 'cheat.html' },
+        { id: 'tutorial', label: 'Tutorial', file: 'tutorial.html' }
+      ];
+
+      const app = document.getElementById('app');
+      const navList = document.getElementById('navList');
+      const sidebar = document.getElementById('sidebar');
+      const mobileToggle = document.getElementById('mobileToggle');
+      const toast = document.getElementById('toast');
+      const modeToggle = document.getElementById('modeToggle');
+      const downloadBtn = document.getElementById('downloadBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const progressMeta = document.getElementById('progressMeta');
+      const progressFill = document.getElementById('progressFill');
+      const statusText = document.getElementById('statusText');
+
+      const MODE_KEY = 'mdh_mode';
+      const ANSWER_PREFIX = 'mdh_answer_';
+      const ANSWER_COUNT_KEY = 'mdh_answer_count';
+      let currentPage = 'session';
+      let missionCount = 0;
+      let mode = localStorage.getItem(MODE_KEY) === 'dosen' ? 'dosen' : 'student';
+      let revealObserver = null;
+      const pageCache = new Map();
+
+      function initNav() {
+        navList.innerHTML = pages.map((page) => `
+          <button class="nav-item" data-page="${page.id}" type="button">${page.label}</button>
+        `).join('');
+
+        navList.querySelectorAll('.nav-item').forEach((item) => {
+          item.addEventListener('click', () => {
+            const id = item.dataset.page;
+            setActiveNav(id);
+            loadPage(id);
+            if (window.innerWidth <= 920) sidebar.classList.remove('open');
+          });
+        });
+
+        mobileToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+      }
+
+      function setActiveNav(id) {
+        navList.querySelectorAll('.nav-item').forEach((item) => {
+          item.classList.toggle('active', item.dataset.page === id);
+        });
+      }
+
+      async function loadPage(id) {
+        const page = pages.find((p) => p.id === id);
+        if (!page) return;
+        currentPage = id;
+
+        app.classList.remove('is-entering');
+        app.classList.add('is-leaving');
+
+        let html = '<section><h1>Content not found</h1></section>';
+        try {
+          if (pageCache.has(page.file)) {
+            html = pageCache.get(page.file);
+          } else {
+            const res = await fetch(page.file, { cache: 'no-store' });
+            if (!res.ok) throw new Error('fetch failed');
+            html = await res.text();
+            pageCache.set(page.file, html);
+          }
+        } catch {
+          statusText.textContent = 'Offline fallback active';
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 180));
+        app.innerHTML = html;
+
+        requestAnimationFrame(() => {
+          app.classList.remove('is-leaving');
+          app.classList.add('is-entering');
+        });
+
+        enhanceLoadedContent();
+        statusText.textContent = `Loaded: ${page.label}`;
+      }
+
+      function enhanceLoadedContent() {
+        app.querySelectorAll('article, .card, section > div').forEach((el) => {
+          el.classList.add('card');
+        });
+
+        setupRevealObserver();
+
+        if (currentPage === 'mission') {
+          enhanceMissionPage();
+        } else {
+          missionCount = Number(localStorage.getItem(ANSWER_COUNT_KEY)) || missionCount;
+          refreshMissionProgress();
+        }
+
+        applyMode();
+      }
+
+      function enhanceMissionPage() {
+        const questions = app.querySelectorAll('[data-mission-question], .question');
+        missionCount = questions.length;
+        localStorage.setItem(ANSWER_COUNT_KEY, String(missionCount));
+
+        questions.forEach((questionEl, index) => {
+          let input = app.querySelector(`textarea[data-answer-index="${index}"]`);
+          if (!input) {
+            input = document.createElement('textarea');
+            input.className = 'answer-box';
+            input.placeholder = 'Tulis jawaban kamu...';
+            input.dataset.answerIndex = String(index);
+            questionEl.insertAdjacentElement('afterend', input);
+          }
+
+          input.value = localStorage.getItem(`${ANSWER_PREFIX}${index}`) || '';
+          autoResize(input);
+          input.addEventListener('input', () => {
+            localStorage.setItem(`${ANSWER_PREFIX}${index}`, input.value.trim());
+            autoResize(input);
+            showToast('Saved');
+            refreshMissionProgress();
+          });
+        });
+
+        refreshMissionProgress();
+      }
+
+      function refreshMissionProgress() {
+        if (!missionCount) {
+          updateProgress(0, 0);
+          return;
+        }
+
+        let filled = 0;
+        for (let i = 0; i < missionCount; i += 1) {
+          if ((localStorage.getItem(`${ANSWER_PREFIX}${i}`) || '').trim()) filled += 1;
+        }
+
+        updateProgress(filled, missionCount);
+      }
+
+      function updateProgress(filled, total) {
+        const percent = total ? Math.round((filled / total) * 100) : 0;
+        progressMeta.textContent = `Progress: ${percent}%`;
+        progressFill.style.width = `${percent}%`;
+      }
+
+      function applyMode() {
+        const isDosen = mode === 'dosen';
+        modeToggle.textContent = isDosen ? 'Dosen Mode' : 'Student Mode';
+        app.classList.toggle('hide-answer-keys', !isDosen);
+        localStorage.setItem(MODE_KEY, mode);
+      }
+
+      function downloadAnswers() {
+        if (!missionCount) {
+          showToast('Buka halaman Mission dulu');
+          return;
+        }
+
+        const lines = [];
+        for (let i = 0; i < missionCount; i += 1) {
+          const answer = (localStorage.getItem(`${ANSWER_PREFIX}${i}`) || '').trim() || '-';
+          lines.push(`Q${i + 1}: ${answer}`);
+        }
+
+        const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'jawaban_mission.txt';
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function resetAnswers() {
+        const total = Number(localStorage.getItem(ANSWER_COUNT_KEY)) || missionCount;
+        if (!total) {
+          showToast('Belum ada jawaban');
+          return;
+        }
+
+        if (!window.confirm('Hapus semua jawaban tersimpan?')) return;
+
+        for (let i = 0; i < total; i += 1) {
+          localStorage.removeItem(`${ANSWER_PREFIX}${i}`);
+        }
+
+        app.querySelectorAll('.answer-box').forEach((el) => {
+          el.value = '';
+          autoResize(el);
+        });
+
+        refreshMissionProgress();
+        showToast('Jawaban direset');
+      }
+
+      function setupRevealObserver() {
+        const targets = app.querySelectorAll('h1, h2, h3, p, li, .card, .answer-box, .answer-key');
+        targets.forEach((el, index) => {
+          el.classList.add('reveal');
+          el.style.setProperty('--delay', `${Math.min(index * 35, 280)}ms`);
+        });
+
+        if (revealObserver) revealObserver.disconnect();
+        revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+
+        targets.forEach((el) => revealObserver.observe(el));
+      }
+
+      function autoResize(el) {
+        el.style.height = 'auto';
+        el.style.height = `${el.scrollHeight}px`;
+      }
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(showToast.timer);
+        showToast.timer = setTimeout(() => toast.classList.remove('show'), 850);
+      }
+
+      modeToggle.addEventListener('click', () => {
+        mode = mode === 'student' ? 'dosen' : 'student';
+        applyMode();
+      });
+
+      downloadBtn.addEventListener('click', downloadAnswers);
+      resetBtn.addEventListener('click', resetAnswers);
+
+      async function prefetchPages() {
+        const jobs = pages.map(async (p) => {
+          try {
+            const res = await fetch(p.file, { cache: 'no-store' });
+            if (!res.ok) return;
+            const html = await res.text();
+            pageCache.set(p.file, html);
+            if (p.id === 'mission') {
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(html, 'text/html');
+              const total = doc.querySelectorAll('[data-mission-question], .question').length;
+              if (total) {
+                missionCount = total;
+                localStorage.setItem(ANSWER_COUNT_KEY, String(total));
+                refreshMissionProgress();
+              }
+            }
+          } catch {}
+        });
+        await Promise.all(jobs);
+      }
+
+      initNav();
+      setActiveNav('session');
+      loadPage('session');
+      prefetchPages();
+    </script>
+  </body>
+</html>
